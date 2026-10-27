@@ -11,7 +11,10 @@ Claude Code에서:
 /plugin install paper-explainer-video@paper-explainer
 ```
 
-업데이트는 `/plugin marketplace update paper-explainer`.
+ Update
+```
+/plugin marketplace update paper-explainer
+```
 
 ## 사용법
 
