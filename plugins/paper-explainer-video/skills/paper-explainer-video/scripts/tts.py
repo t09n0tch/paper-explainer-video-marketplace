@@ -257,14 +257,15 @@ def main():
             say_text = s.get("say", {}).get(str(i), text) if isinstance(s.get("say"), dict) else text
             raw = os.path.join(tmp, "%s_%02d" % (s["id"], i))
             src, r = synth(engine, voice, say_text, raw, a.rate, a.cmd)
-            if not os.path.exists(src) and fallback and not made:
+            bad = lambda: r.returncode or not os.path.exists(src) or not os.path.getsize(src)
+            if bad() and fallback and not made:
                 print("%s failed (%s); falling back" % (engine, (r.stderr or r.stdout).strip()[-200:]))
                 engine, voice = pick(lang, skip=(engine,)); a.rate = None; fallback = False
                 if not engine:
                     sys.exit("No other TTS engine found.")
                 print("engine: %s  voice: %s" % (engine, voice))
                 src, r = synth(engine, voice, say_text, raw, a.rate, a.cmd)
-            if not os.path.exists(src):
+            if bad():
                 sys.exit("TTS failed on %s line %d:\n%s%s" % (s["id"], i, r.stdout, r.stderr))
             c = run(["ffmpeg", "-y", "-v", "error", "-i", src, "-ac", "1", "-ar", "48000", "-sample_fmt", "s16",
                      "-af", "silenceremove=start_periods=1:start_threshold=-50dB,areverse,silenceremove=start_periods=1:start_threshold=-50dB,areverse",
