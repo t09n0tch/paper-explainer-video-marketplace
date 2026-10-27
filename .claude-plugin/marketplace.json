@@ -1,9 +1,11 @@
 {
   "name": "paper-explainer",
-  "owner": { "name": "jangwon" },
+  "owner": {
+    "name": "jangwon"
+  },
   "metadata": {
-    "description": "논문을 TTS 내레이션 모션그래픽 설명 영상으로 만드는 스킬",
-    "version": "1.0.0"
+    "description": "논문·강의자료를 TTS 내레이션 설명 영상으로 만드는 스킬",
+    "version": "1.1.0"
   },
   "plugins": [
     {
@@ -12,7 +14,27 @@
       "description": "Turn an academic paper into a narrated explainer video (MP4 + subtitles). Korean by default.",
       "version": "1.0.0",
       "category": "productivity",
-      "keywords": ["paper", "video", "tts", "motion-graphics", "논문"]
+      "keywords": [
+        "paper",
+        "video",
+        "tts",
+        "motion-graphics",
+        "논문"
+      ]
+    },
+    {
+      "name": "lecture-explainer-video",
+      "source": "./plugins/lecture-explainer-video",
+      "description": "Turn lecture slides (PDF) into narrated review episodes on the real slides, with quizzes, soft subtitles and chapters (MP4). Korean by default.",
+      "version": "1.0.0",
+      "category": "productivity",
+      "keywords": [
+        "lecture",
+        "slides",
+        "video",
+        "tts",
+        "강의자료"
+      ]
     }
   ]
 }
