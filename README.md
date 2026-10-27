@@ -75,20 +75,26 @@ https://github.com/user-attachments/assets/c3926738-7376-4dc4-a5e2-92bd735e5d04
 
 ## 기본값과 변경
 
-| | 기본값 |
+### 기본값
+
+| 항목 | 기본값 |
 |---|---|
-| 음성 | Microsoft 신경망 음성 `ko-KR-SunHiNeural` (edge-tts). 못 쓰면 이 컴퓨터의 다른 음성으로 자동 대체 |
-| 영상 | H.264 (libx264), CRF 18, preset medium, 1920×1080 30fps |
-| 오디오 | AAC 192 kbps |
+| 음성 | `ko-KR-SunHiNeural` (Microsoft 신경망 음성, edge-tts) · 못 쓰면 이 컴퓨터의 다른 음성으로 자동 대체 |
+| 영상 | H.264 (libx264) · CRF 18 · preset medium · 1920×1080 · 30fps |
+| 오디오 | AAC · 192 kbps |
 
-바꾸고 싶으면 Claude에게 말하면 됩니다.
+### 변경 방법
 
-- "다른 목소리 들려줘" → 이 컴퓨터에서 가능한 음성 샘플을 만들어 고르게 해줍니다.
-- "이번 영상만 남자 목소리로" → 그 영상의 `script.json`에만 저장
-- "앞으로 계속 Yuna 목소리로", "앞으로 CRF 23으로" → `~/.config/paper2video/config.json`에 저장되어 이후 모든 영상에 적용
-- "기본값으로 되돌려" → 위 파일 삭제
+Claude에게 말로 하면 됩니다.
 
-직접 하려면 `skills/paper2video/scripts/settings.py show | set | reset`.
+| 하고 싶은 것 | 이렇게 말하기 | 적용 범위 | 저장 위치 |
+|---|---|---|---|
+| 목소리 들어 보고 고르기<br>(이 컴퓨터에서 쓸 수 있는 음성 샘플을 만들어 줌) | "다른 목소리 들려줘" | 고른 뒤 정함 | — |
+| 이번 영상만 바꾸기 | "이번 영상만 남자 목소리로" | 이 영상만 | 그 영상의 `script.json` |
+| 앞으로 계속 바꾸기 | "앞으로 계속 Yuna 목소리로", "앞으로 CRF 23으로" | 이후 모든 영상 | `~/.config/paper2video/config.json` |
+| 기본값으로 되돌리기 | "기본값으로 되돌려" | 이후 모든 영상 | 위 파일 삭제 |
+
+터미널에서 직접 하려면 `skills/paper2video/scripts/settings.py show | set | reset`.
 
 [↑ 맨 위로](#pdf2video)
 
@@ -152,7 +158,7 @@ https://github.com/user-attachments/assets/8663691e-55b5-4586-b6be-d2ad302056c4
 | Playwright + Chromium | `pip install playwright && python -m playwright install chromium` |
 | edge-tts (기본 음성) | `pip install edge-tts` (인터넷 필요) |
 
-음성과 인코딩 기본값, 바꾸는 방법은 위의 논문 스킬과 같아요. 사용자 설정만 `~/.config/lecture2video/config.json`에 따로 저장돼요.
+음성과 인코딩 기본값, 바꾸는 방법은 [위의 논문 스킬](#기본값과-변경)과 같아요. 사용자 설정만 `~/.config/lecture2video/config.json`에 따로 저장돼요.
 
 ## 주의
 
