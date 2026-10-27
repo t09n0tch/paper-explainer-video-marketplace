@@ -1,0 +1,16 @@
+{
+  "voice": {
+    "engine": "edge",
+    "voice": {"ko": "ko-KR-SunHiNeural", "en": "en-US-AriaNeural", "ja": "ja-JP-NanamiNeural"},
+    "rate": null,
+    "fallback": "auto"
+  },
+  "encode": {
+    "codec": "libx264",
+    "crf": 18,
+    "preset": "medium",
+    "pix_fmt": "yuv420p",
+    "audio_codec": "aac",
+    "audio_bitrate": "192k"
+  }
+}
