@@ -11,7 +11,7 @@ Claude Code에서:
 /plugin install paper-explainer-video@paper-explainer
 ```
 
-설치 후 "이 논문 영상으로 만들어줘"라고 하면 됩니다. 업데이트는 `/plugin marketplace update paper-explainer`.
+업데이트는 `/plugin marketplace update paper-explainer`.
 
 ## 사용법
 
@@ -37,11 +37,9 @@ Claude Code에서:
 >
 > 완성했어요. `film.mp4` · `narration.srt` (자막) · `narration.md` (대본)
 
-"이 논문 영상으로 만들어줘"와 함께 PDF 링크나 파일을 줘도 됩니다. 질문에 답하지 않고 "알아서 해줘"라고 하면 추천값으로 끝까지 만듭니다.
-
 ## 예시: ASPIRE (NVIDIA, 2026)
 
-위 대화 그대로 만든 영상입니다. [ASPIRE: Agentic Skills Discovery for Robotics](https://research.nvidia.com/labs/gear/aspire/assets/aspire.pdf) · 6분 15초 · 한국어
+[ASPIRE: Agentic Skills Discovery for Robotics](https://research.nvidia.com/labs/gear/aspire/assets/aspire.pdf)
 
 https://github.com/user-attachments/assets/c3926738-7376-4dc4-a5e2-92bd735e5d04
 
@@ -55,7 +53,6 @@ https://github.com/user-attachments/assets/c3926738-7376-4dc4-a5e2-92bd735e5d04
 | Playwright + Chromium | `pip install playwright && python -m playwright install chromium` |
 | edge-tts (기본 음성) | `pip install edge-tts` (인터넷 필요) |
 
-없는 것은 Claude가 작업 중에 설치를 안내합니다.
 
 ## 기본값과 변경
 
