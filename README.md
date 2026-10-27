@@ -20,7 +20,8 @@ Claude Code에서:
 > **👤 사용자**
 >
 > ```
-> /paper-explainer-video:paper-explainer-video https://research.nvidia.com/labs/gear/aspire/assets/aspire.pdf
+> /paper-explainer-video:paper-explainer-video 
+> /https://research.nvidia.com/labs/gear/aspire/assets/aspire.pdf
 > ```
 
 > **🤖 Claude**
