@@ -11,8 +11,6 @@ Claude Code에서:
 /plugin install paper-explainer-video@paper-explainer
 ```
 
-저장소: https://github.com/t09n0tch/paper-explainer-video-marketplace
-
 설치 후 "이 논문 영상으로 만들어줘"라고 하면 됩니다. 업데이트는 `/plugin marketplace update paper-explainer`.
 
 ## 사용법
