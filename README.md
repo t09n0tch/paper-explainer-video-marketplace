@@ -40,7 +40,7 @@ Claude Code에서:
 > 완성했어요. `film.mp4` · `narration.srt` (자막) · `narration.md` (대본)
 
 ## 예시: ASPIRE (NVIDIA, 2026)
-
+Model : Opus 5.5 medium
 [ASPIRE: Agentic Skills Discovery for Robotics](https://research.nvidia.com/labs/gear/aspire/assets/aspire.pdf)
 
 https://github.com/user-attachments/assets/c3926738-7376-4dc4-a5e2-92bd735e5d04
