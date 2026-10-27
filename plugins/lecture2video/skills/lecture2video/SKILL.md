@@ -1,6 +1,6 @@
 ---
-name: lecture-explainer-video
-description: Turn lecture material (slide-deck PDF such as Beamer or PowerPoint exports, lecture notes, optionally a PPTX with speaker notes) into a series of short narrated explainer videos, one per section, that walk through the real slides with highlights, a TTS voice, hand-built animations for the hardest ideas, board-style equations, pause-and-think quizzes, soft subtitles and chapter markers, exported as MP4. Use this skill whenever the user wants course slides, 강의자료, 수업 PDF, 강의 슬라이드 or 강의노트 turned into a video, lecture video, review video, study video or animation (강의 영상, 복습 영상, 강의 요약 영상, "이 강의자료 영상으로 만들어줘"), or wants to continue or redo such an episode, even if they never say "skill". For a single research paper use paper-explainer-video instead. Korean by default; works for other languages.
+name: lecture2video
+description: Turn lecture material (slide-deck PDF such as Beamer or PowerPoint exports, lecture notes, optionally a PPTX with speaker notes) into a series of short narrated explainer videos, one per section, that walk through the real slides with highlights, a TTS voice, hand-built animations for the hardest ideas, board-style equations, pause-and-think quizzes, soft subtitles and chapter markers, exported as MP4. Use this skill whenever the user wants course slides, 강의자료, 수업 PDF, 강의 슬라이드 or 강의노트 turned into a video, lecture video, review video, study video or animation (강의 영상, 복습 영상, 강의 요약 영상, "이 강의자료 영상으로 만들어줘"), or wants to continue or redo such an episode, even if they never say "skill". For a single research paper use paper2video instead. Korean by default; works for other languages.
 ---
 
 # Lecture explainer video
@@ -127,7 +127,7 @@ the scope the user means:
 - This episode only: `"voice": {...}` or `"encode": {"crf": 23}` in `script.json`, then
   delete `audio/*.wav` and re-run `tts.py` and `timeline.py`.
 - Every episode from now on: `python $S/settings.py set voice '{"engine": "say", "voice": "Yuna"}'`
-  (or `set encode ...`), stored in `~/.config/lecture-explainer-video/config.json`;
+  (or `set encode ...`), stored in `~/.config/lecture2video/config.json`;
   `settings.py show ep01/` prints what will be used, `settings.py reset` undoes it.
 
 Engines: `say` (macOS), `sapi` (Windows), `edge` (natural, needs `pip install edge-tts`

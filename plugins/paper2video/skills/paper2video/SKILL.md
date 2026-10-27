@@ -1,6 +1,6 @@
 ---
-name: "paper-explainer-video"
-description: Turn an academic paper (PDF, arXiv link or pasted text) into a narrated explainer video with motion graphics, voiced by text-to-speech, with chapter chips, sentence-by-sentence captions, a pseudo-3D world of the paper's setting, and charts built from the paper's own tables, exported as MP4 plus subtitles. Use this skill whenever the user wants a paper explained as a video, animation or motion graphic (논문 설명 영상, 논문 리뷰 영상, 논문 모션그래픽, 논문 애니메이션, TTS 내레이션 영상, "이 논문 영상으로 만들어줘"), or wants to redo or extend such a film, even if they never say "skill". Korean by default; works for other languages.
+name: "paper2video"
+description: Turn an academic paper (PDF, arXiv link or pasted text) into a narrated explainer video with motion graphics, voiced by text-to-speech, with chapter chips, sentence-by-sentence captions, a pseudo-3D world of the paper's setting, and charts built from the paper's own tables, exported as MP4 plus subtitles. Use this skill whenever the user wants a paper explained as a video, animation or motion graphic (논문 설명 영상, 논문 리뷰 영상, 논문 모션그래픽, 논문 애니메이션, TTS 내레이션 영상, "이 논문 영상으로 만들어줘"), or wants to redo or extend such a film, even if they never say "skill". For lecture slides or course material use lecture2video instead. Korean by default; works for other languages.
 ---
 
 # Paper explainer video
@@ -107,7 +107,7 @@ Tell the user which voice was used.
   re-run `tts.py` and `timeline.py`.
 - From now on, every film: `python $S/settings.py set voice '{"engine": "say", "voice": "Yuna"}'`
   or `python $S/settings.py set encode '{"crf": 23, "preset": "slow"}'`. This writes
-  `~/.config/paper-explainer-video/config.json`; `settings.py reset` goes back to the
+  `~/.config/paper2video/config.json`; `settings.py reset` goes back to the
   shipped defaults, `settings.py show film/` prints what will be used.
 - One run: `tts.py --engine ... --voice ...`, `render.py --crf ... --codec ... --preset ...`.
 

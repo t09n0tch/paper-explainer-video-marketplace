@@ -1,35 +1,43 @@
-# paper-explainer-video
+# pdf2video
 
-논문(PDF·arXiv 링크·텍스트)을 3–5분짜리 내레이션 설명 영상(MP4 + 자막)으로 만드는 Claude 스킬입니다.
+PDF를 TTS 내레이션 설명 영상(MP4 + 자막)으로 만드는 Claude 스킬 모음입니다.
 
-같은 마켓플레이스에 강의자료용 스킬 **[lecture-explainer-video](#lecture-explainer-video)** 도 있어요.
+[![논문 → 영상 · paper2video](https://img.shields.io/badge/%EB%85%BC%EB%AC%B8_%E2%86%92_%EC%98%81%EC%83%81-paper2video-0969da?style=for-the-badge)](#paper2video)&nbsp;
+[![강의자료 → 영상 · lecture2video](https://img.shields.io/badge/%EA%B0%95%EC%9D%98%EC%9E%90%EB%A3%8C_%E2%86%92_%EC%98%81%EC%83%81-lecture2video-1a7f37?style=for-the-badge)](#lecture2video)
 
 | 플러그인 | 입력 | 결과 |
 |---|---|---|
-| `paper-explainer-video` | 논문 한 편 | 3–5분 모션그래픽 설명 영상 |
-| `lecture-explainer-video` | 강의 슬라이드 PDF | 실제 슬라이드 위 5–8분 복습 영상 여러 편 (하나로 합치기 가능) |
+| [`paper2video`](#paper2video) | 논문 한 편 (PDF · arXiv 링크 · 텍스트) | 3–5분 모션그래픽 설명 영상 |
+| [`lecture2video`](#lecture2video) | 강의 슬라이드 PDF | 실제 슬라이드 위 5–8분 복습 영상 여러 편 (하나로 합치기 가능) |
 
 ## 설치
 
-Claude Code에서:
+Claude Code에서 마켓플레이스를 추가하고, 필요한 스킬을 설치하세요.
 
 ```
-/plugin marketplace add t09n0tch/paper-explainer-video-marketplace
-/plugin install paper-explainer-video@paper-explainer
-/plugin install lecture-explainer-video@paper-explainer
+/plugin marketplace add t09n0tch/pdf2video
+/plugin install paper2video@pdf2video
+/plugin install lecture2video@pdf2video
 ```
 
- Update
+업데이트
+
 ```
-/plugin marketplace update paper-explainer
+/plugin marketplace update pdf2video
 ```
+
+---
+
+# paper2video
+
+논문(PDF·arXiv 링크·텍스트)을 3–5분짜리 내레이션 설명 영상(MP4 + 자막)으로 만드는 스킬입니다.
 
 ## 사용법
 
 > **👤 사용자**
 >
 > ```
-> /paper-explainer-video:paper-explainer-video # 스킬
+> /paper2video:paper2video # 스킬
 > https://arxiv.org/abs/2607.00272 # 논문 url
 > ```
 
@@ -54,7 +62,7 @@ Model : Opus 5.5 medium
 
 https://github.com/user-attachments/assets/c3926738-7376-4dc4-a5e2-92bd735e5d04
 
-[고화질 다운로드 (1080p, 22.6 MB)](https://github.com/t09n0tch/paper-explainer-video-marketplace/releases/download/examples/aspire-film.mp4) · [대본](examples/aspire/narration.md) · [자막](examples/aspire/narration.srt)
+[고화질 다운로드 (1080p, 22.6 MB)](https://github.com/t09n0tch/pdf2video/releases/download/examples/aspire-film.mp4) · [대본](examples/aspire/narration.md) · [자막](examples/aspire/narration.srt)
 
 ## 필요한 것
 
@@ -77,27 +85,25 @@ https://github.com/user-attachments/assets/c3926738-7376-4dc4-a5e2-92bd735e5d04
 
 - "다른 목소리 들려줘" → 이 컴퓨터에서 가능한 음성 샘플을 만들어 고르게 해줍니다.
 - "이번 영상만 남자 목소리로" → 그 영상의 `script.json`에만 저장
-- "앞으로 계속 Yuna 목소리로", "앞으로 CRF 23으로" → `~/.config/paper-explainer-video/config.json`에 저장되어 이후 모든 영상에 적용
+- "앞으로 계속 Yuna 목소리로", "앞으로 CRF 23으로" → `~/.config/paper2video/config.json`에 저장되어 이후 모든 영상에 적용
 - "기본값으로 되돌려" → 위 파일 삭제
 
-직접 하려면 `skills/paper-explainer-video/scripts/settings.py show | set | reset`.
+직접 하려면 `skills/paper2video/scripts/settings.py show | set | reset`.
+
+[↑ 맨 위로](#pdf2video)
 
 ---
 
-# lecture-explainer-video
+# lecture2video
 
 강의 슬라이드 PDF를 섹션별 5–8분 복습 영상으로 만드는 Claude 스킬입니다. 슬라이드 위에 그림을 새로 그리는 대신 **교수님 슬라이드를 그대로 띄우고**, 내레이션이 말하는 줄에 형광펜·밑줄·동그라미를 맞춰 짚어 줘요. 슬라이드에 빠져 있는 "왜"는 음성이 채우고, 가장 어려운 개념만 애니메이션으로 다시 그려요.
-
-```
-/plugin install lecture-explainer-video@paper-explainer
-```
 
 ## 사용법
 
 > **👤 사용자**
 >
 > ```
-> /lecture-explainer-video:lecture-explainer-video
+> /lecture2video:lecture2video
 > ~/Downloads/vae.pdf 영상으로 만들어줘
 > ```
 
@@ -137,8 +143,10 @@ https://github.com/user-attachments/assets/c3926738-7376-4dc4-a5e2-92bd735e5d04
 | Playwright + Chromium | `pip install playwright && python -m playwright install chromium` |
 | edge-tts (기본 음성) | `pip install edge-tts` (인터넷 필요) |
 
-음성과 인코딩 기본값, 바꾸는 방법은 위의 논문 스킬과 같아요. 사용자 설정만 `~/.config/lecture-explainer-video/config.json`에 따로 저장돼요.
+음성과 인코딩 기본값, 바꾸는 방법은 위의 논문 스킬과 같아요. 사용자 설정만 `~/.config/lecture2video/config.json`에 따로 저장돼요.
 
 ## 주의
 
 만든 영상에는 강의 슬라이드와 그 안의 교재 그림이 그대로 들어가요. 개인 복습용이 아니라면 공개 업로드 전에 강의자의 허락을 받으세요.
+
+[↑ 맨 위로](#pdf2video)

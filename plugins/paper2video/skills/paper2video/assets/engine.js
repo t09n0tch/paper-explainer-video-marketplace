@@ -1,4 +1,4 @@
-/* engine.js — helpers shared by every scene of a paper-explainer film.
+/* engine.js — helpers shared by every scene of a film.
  *
  * Everything here is a pure function of the values passed in, so a scene's
  * render(t) stays deterministic (same t -> same picture), which is what lets

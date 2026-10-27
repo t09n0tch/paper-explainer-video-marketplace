@@ -1,6 +1,6 @@
 # Craft: what makes a lecture episode worth watching
 
-These rules come from the paper-explainer skill's feedback (narration leads, one
+These rules come from the paper2video skill's feedback (narration leads, one
 change per sentence, no "PPT with motion") and from a lecture prototype the user
 accepted: episode 1 of a VAE lecture, 3:23, slides 3–7.
 

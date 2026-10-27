@@ -23,7 +23,7 @@ usage: python tts.py film/ --samples [--text "..."]   one sentence in every avai
        python tts.py film/ [--engine auto|say|sapi|edge|sherpa|espeak|cmd] [--voice NAME]
                            [--rate N] [--cmd TEMPLATE] [--only ID[,ID]] [--force] [--list]
 Without --engine the voice comes from settings.py: the shipped default (edge, ko-KR-SunHiNeural),
-overridden by the user's ~/.config/paper-explainer-video/config.json, overridden by script.json
+overridden by the user's ~/.config/paper2video/config.json, overridden by script.json
 "voice": {"engine": "...", "voice": "...", "rate": ...}. If the default engine is missing or fails
 (no internet), tts.py falls back to the best other voice on this machine.
 After it finishes, run timeline.py again so the timing follows the real speech.
@@ -38,7 +38,7 @@ SHERPA_MODELS = {  # lang -> (release asset, folder, model file)
     "ko": ("vits-mimic3-ko_KO-kss_low", "ko_KO-kss_low.onnx"),
 }
 SHERPA_URL = "https://github.com/k2-fsa/sherpa-onnx/releases/download/tts-models/%s.tar.bz2"
-CACHE = os.path.join(os.path.expanduser("~"), ".cache", "paper-explainer-video", "tts")
+CACHE = os.path.join(os.path.expanduser("~"), ".cache", "paper2video", "tts")
 
 DEFAULT_VOICE = {
     "say": {"ko": "Yuna", "en": "Samantha", "ja": "Kyoko"},

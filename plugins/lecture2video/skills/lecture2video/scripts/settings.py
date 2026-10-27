@@ -2,7 +2,7 @@
 """Voice and encoding settings, layered (later wins):
 
   1. <skill>/defaults.json                          shipped defaults (edge SunHi, x264 CRF 18)
-  2. ~/.config/lecture-explainer-video/config.json    this user's own defaults, for every film
+  2. ~/.config/lecture2video/config.json    this user's own defaults, for every film
   3. film/script.json  "voice" / "encode"           this film only
   4. command-line flags of tts.py / render.py       this run only
 
@@ -15,7 +15,7 @@ import json, os, sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 DEFAULTS = os.path.join(HERE, "..", "defaults.json")
-USER = os.path.join(os.path.expanduser("~"), ".config", "lecture-explainer-video", "config.json")
+USER = os.path.join(os.path.expanduser("~"), ".config", "lecture2video", "config.json")
 
 
 def _read(path):

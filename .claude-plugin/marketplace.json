@@ -1,5 +1,5 @@
 {
-  "name": "paper-explainer",
+  "name": "pdf2video",
   "owner": {
     "name": "jangwon"
   },
@@ -9,8 +9,8 @@
   },
   "plugins": [
     {
-      "name": "paper-explainer-video",
-      "source": "./plugins/paper-explainer-video",
+      "name": "paper2video",
+      "source": "./plugins/paper2video",
       "description": "Turn an academic paper into a narrated explainer video (MP4 + subtitles). Korean by default.",
       "version": "1.0.0",
       "category": "productivity",
@@ -23,8 +23,8 @@
       ]
     },
     {
-      "name": "lecture-explainer-video",
-      "source": "./plugins/lecture-explainer-video",
+      "name": "lecture2video",
+      "source": "./plugins/lecture2video",
       "description": "Turn lecture slides (PDF) into narrated review episodes on the real slides, with quizzes, soft subtitles and chapters (MP4). Korean by default.",
       "version": "1.0.0",
       "category": "productivity",
