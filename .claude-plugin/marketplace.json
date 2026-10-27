@@ -1,0 +1,18 @@
+{
+  "name": "paper-explainer",
+  "owner": { "name": "jangwon" },
+  "metadata": {
+    "description": "논문을 TTS 내레이션 모션그래픽 설명 영상으로 만드는 스킬",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "paper-explainer-video",
+      "source": "./plugins/paper-explainer-video",
+      "description": "Turn an academic paper into a narrated explainer video (MP4 + subtitles). Korean by default.",
+      "version": "1.0.0",
+      "category": "productivity",
+      "keywords": ["paper", "video", "tts", "motion-graphics", "논문"]
+    }
+  ]
+}

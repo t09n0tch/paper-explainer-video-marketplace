@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>Film</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #000; overflow: hidden }
+  #wrap { position: fixed; inset: 0 0 56px 0; display: flex; align-items: center; justify-content: center }
+  #stage { position: relative; width: 1920px; height: 1080px; overflow: hidden; flex: none; transform-origin: center }
+  .scene { position: absolute; inset: 0; visibility: hidden }
+  #caps { position: absolute; left: 0; right: 0; bottom: 56px; height: 0; z-index: 50 }
+  #chap { z-index: 50 }
+  #ui { position: fixed; left: 0; right: 0; bottom: 0; height: 56px; display: flex; gap: 14px; align-items: center; padding: 0 16px; background: #111; color: #ddd; font: 14px system-ui, sans-serif }
+  #ui input { flex: 1 }
+  #ui button { width: 44px; height: 36px; font-size: 16px }
+  body.render #ui { display: none }
+  body.render #wrap { inset: 0; display: block }
+  body.render #stage { transform: none !important }
+</style>
+<link rel="stylesheet" href="katex/katex.min.css">
+<link rel="stylesheet" href="film.css">
+</head>
+<body>
+<div id="wrap"><div id="stage"><div id="caps"></div><div id="chap" class="chap"></div></div></div>
+<div id="ui"><button id="play">&#9654;</button><input id="scrub" type="range" min="0" max="10000" value="0"><span id="tc">0:00</span></div>
+<audio id="aud" preload="auto"></audio>
+<script src="katex/katex.min.js"></script>
+<script src="engine.js"></script>
+<script src="timeline.js"></script>
+<script>
+(function () {
+  const RENDER = /[?&]render=1/.test(location.search);
+  if (RENDER) document.body.classList.add('render');
+  const TL = window.TIMELINE, E = window.ENG;
+  const stage = document.getElementById('stage');
+  const capsEl = document.getElementById('caps'), chap = document.getElementById('chap');
+  const REG = {};
+  window.SCENE = (id, def) => { REG[id] = def; };
+
+  // caption layer: one element per narration line, as the viewer reads it
+  const caps = [];
+  TL.scenes.forEach((s) => s.caps.forEach((c) => {
+    const p = document.createElement('p'); p.className = 'cap-line'; p.textContent = c.text;
+    capsEl.appendChild(p); caps.push({ el: p, t0: s.start + c.t0, t1: s.start + c.t1 });
+  }));
+
+  // LaTeX -> KaTeX markup, once per element (keeps the source in data-tex)
+  function typeset(el) {
+    if (el.dataset.tex != null || !window.katex) return;
+    const src = el.textContent; el.dataset.tex = src;
+    try { katex.render(src, el, { displayMode: el.classList.contains('display'), throwOnError: false, output: 'html' }); }
+    catch (e) { console.error('tex: ' + src, e); }
+  }
+  const load = (src) => new Promise((res) => { const sc = document.createElement('script'); sc.src = src; sc.onload = res; sc.onerror = () => { console.error('missing ' + src); res(); }; document.body.appendChild(sc); });
+  const scenes = [];
+  const ready = (async () => {
+    if (document.fonts && document.fonts.ready) await document.fonts.ready;
+    for (const f of TL.shared || []) await load(f);
+    for (const s of TL.scenes) await load('scenes/' + s.id + '.js');
+    const P = E.W3.pal(stage);
+    for (const s of TL.scenes) {
+      const box = document.createElement('div'); box.className = 'scene'; stage.insertBefore(box, capsEl);
+      const k = Object.assign({}, E, { stage: box, dur: s.dur, caps: s.caps, P, id: s.id,
+        h(html) { const d = document.createElement('div'); d.innerHTML = html.trim(); return d.firstElementChild; },
+        q(sel) { return box.querySelector(sel); },
+        // math in the paper's own typesetting: k.tex('S_T') -> element; or write <span class="tex">S_T</span>
+        tex(src, o) { const e = document.createElement(o && o.display ? 'div' : 'span'); e.className = 'tex' + (o && o.display ? ' display' : ''); e.textContent = src; typeset(e); return e; } });
+      const def = REG[s.id] || { render() {} };
+      try { if (def.init) await def.init.call(def, k); } catch (e) { console.error('init ' + s.id, e); }
+      box.querySelectorAll('.tex').forEach(typeset);
+      scenes.push({ s, k, def, box });
+    }
+    if (document.fonts && document.fonts.ready) await document.fonts.ready;  // math fonts load once used
+    renderAt(0);
+  })();
+
+  let cur = -1;
+  function renderAt(T) {
+    T = Math.max(0, Math.min(TL.duration - 1e-3, T));
+    let i = scenes.findIndex((x) => T >= x.s.start && T < x.s.start + x.s.dur);
+    if (i < 0) i = scenes.length - 1;
+    if (i !== cur) { scenes.forEach((x, j) => { x.box.style.visibility = j === i ? 'visible' : 'hidden'; }); cur = i; }
+    const x = scenes[i], lt = T - x.s.start;
+    try { x.def.render.call(x.def, lt, x.k); } catch (e) { console.error('render ' + x.s.id, e); }
+    for (const c of caps) { const a = Math.min(E.c01((T - c.t0) / 0.25), E.c01((c.t1 - T) / 0.25)); c.el.style.opacity = a; c.el.style.visibility = a > 0 ? 'visible' : 'hidden'; }
+    const prev = i > 0 ? scenes[i - 1].s.chapter : null;
+    chap.textContent = x.s.chapter || '';
+    chap.style.visibility = x.s.chapter ? 'visible' : 'hidden';
+    chap.style.opacity = x.s.chapter === prev ? 1 : E.eo(E.seg(lt, 0, 0.4));
+  }
+  window.FILM = { ready, renderAt, duration: TL.duration, fps: TL.fps || 30 };
+
+  if (RENDER) return;
+  // preview: fit, play, scrub, audio sync
+  const fit = () => { const w = innerWidth, h = innerHeight - 56; stage.style.transform = 'scale(' + Math.min(w / 1920, h / 1080) + ')'; };
+  addEventListener('resize', fit); fit();
+  const aud = document.getElementById('aud'); let hasAud = false; aud.addEventListener('canplay', () => { hasAud = true; }); aud.addEventListener('error', () => { hasAud = false; }); aud.src = 'audio/mix.wav';
+  const scrub = document.getElementById('scrub'), tc = document.getElementById('tc'), btn = document.getElementById('play');
+  let playing = false, t = 0, last = 0;
+  const fmt = (s) => Math.floor(s / 60) + ':' + String(Math.floor(s % 60)).padStart(2, '0');
+  const show = () => { renderAt(t); scrub.value = String(Math.round(t / TL.duration * 10000)); tc.textContent = fmt(t) + ' / ' + fmt(TL.duration); };
+  btn.onclick = () => { playing = !playing; btn.innerHTML = playing ? '&#10073;&#10073;' : '&#9654;'; last = performance.now(); if (hasAud) { aud.currentTime = t; playing ? aud.play() : aud.pause(); } };
+  scrub.oninput = () => { t = scrub.value / 10000 * TL.duration; if (hasAud) aud.currentTime = t; show(); };
+  addEventListener('keydown', (e) => { if (e.code === 'Space') { e.preventDefault(); btn.onclick(); } });
+  ready.then(() => { const loop = (now) => { if (playing) { t = hasAud && !aud.paused ? aud.currentTime : t + (now - last) / 1000; last = now; if (t >= TL.duration) { t = TL.duration; playing = false; btn.innerHTML = '&#9654;'; } show(); } requestAnimationFrame(loop); }; show(); requestAnimationFrame(loop); });
+})();
+</script>
+</body>
+</html>

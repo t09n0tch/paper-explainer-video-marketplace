@@ -1,0 +1,107 @@
+# Craft: what makes a paper explainer watchable
+
+These rules come from a real round of feedback. The rejected film: 95 seconds,
+13 scenes, each a headline plus a chart plus a footnote, no voice. The viewer's
+words: "too fast, I don't understand it, it should be more detailed, I didn't ask
+for PPT slides with motion graphics." The accepted reference: a 4-minute film,
+TTS voice only, one sentence captioned at a time, the same 3D scene revisited,
+diagrams built step by step, small source-tagged data panels.
+
+## 1. Narration leads, the picture follows
+
+- Write the narration first. Every scene is a set of sentences; the picture's
+  job is to show what the current sentence says, no more.
+- One sentence = one change on screen (something appears, moves, fills, turns
+  red). If a sentence has nothing to show, the picture keeps moving gently
+  (camera drift, a slow fill) but adds nothing new.
+- Never put on screen a paragraph the voice is not saying. On-screen words are
+  labels, numbers, formula tokens, short panel lines (≤ 12 words). The caption
+  already carries the sentence.
+
+## 2. Structure (4–5 minutes, 12–16 scenes)
+
+| Part | Scenes | Job |
+|---|---|---|
+| Opening | 1 | Title on the paper's world; the one-line takeaway |
+| ① 문제 | 2–3 | The setting made concrete (the task, the scoring), then the gap |
+| ② How they measure | 1–2 | The evaluation idea, its formula, a worked number |
+| ③ The surprising result | 1–2 | The finding that motivates the method |
+| ④–⑦ Method | 1 per component | Name, what it takes in, what it outputs, why it's fast/right |
+| ⑧ 결과 | 2 | Headline table, then one concrete episode compared |
+| ⑨ 감안할 점 | 1 | Fair-comparison caveats, metric definitions, scale, reproducibility |
+| Close | 1 | The takeaway again, title card held ≥ 3 s |
+
+The chip (top left) names the chapter: "① 문제", "④ RRARA". Consecutive scenes
+in one chapter keep the same chip text, and it doesn't re-animate.
+
+## 3. Pacing
+
+- Korean TTS speaks about 5.5–6.5 syllables a second. A sentence of 30–45
+  syllables runs 5–8 s. Longer sentences: split them.
+- 2–4 sentences per scene, so scenes run 12–27 s. Never under 10 s unless it's
+  a pure transition.
+- After a cut, give the eye 0.6–1 s before the first new thing appears.
+- Entrances 0.4–0.6 s, ease-out; staggered items 0.2–0.4 s apart. Exits faster.
+- Hold the final card at least 3 s.
+
+## 4. Visual language
+
+- **One world.** Render the paper's setting (a room, a street, a robot arm's
+  table, a map) with `k.W3` once and come back to it in several chapters with
+  different camera angles. Continuity is what makes it feel like a film rather
+  than slides.
+- **Colour has meaning, held all film:** `--main` = the problem/hazard/loss,
+  `--accent` = the method/agent/our result, `--second` = ink and neutral
+  objects. Baselines are greyed second.
+- **Diagrams build.** A formula appears token by token, each with its meaning
+  under it; then the tokens swap to numbers for the worked example. Timelines
+  sweep with a playhead. Bars grow, then re-sort.
+- **Data panels** (`.card`) are small, sit right or top, and end with a source
+  line: `Table 2`, `논문 그림 3`, `식 (4)`.
+- **Labels ride on objects** in the world (`.lab`, positioned with `W3.at`).
+- **Everything breathes:** a slow camera drift or grid drift on every hold. A
+  frozen frame reads as a bug. Nothing flashes more than 3 times a second.
+
+## 5. Math
+
+- Typeset every equation with KaTeX (`.tex` / `k.tex`), in the paper's notation:
+  same letters, same sub- and superscripts, same operator names (`\mathrm{Stale}`).
+  Never show `S_T`, `t_inf`, `lambda` or `λ_T` as plain text.
+- Build long equations term by term (one `.tex` element per term), each term's
+  meaning in a short Korean label under it, coloured like the thing it measures.
+- Show the equation number as the source (`논문 식 (4)`).
+- The narration names terms in words; a TTS reading LaTeX aloud is useless.
+
+## 6. Safe zones (1920×1080)
+
+- Caption band: bottom ~200 px (captions sit at bottom 56 px, up to 2 lines).
+  Keep scene content above y ≈ 900.
+- Chip: top-left 56,44. Keep content below y ≈ 110 on the left.
+- Margins: 80–140 px left/right.
+
+## 7. Writing for the ear
+
+- Short declaratives. One idea per sentence. Spoken endings (-요, -죠) read
+  naturally in Korean TTS.
+- No parentheses, slashes or footnote marks in a spoken line.
+- Numbers as you'd say them; put the exact figure on screen.
+- Acronyms and model names: test them. Put a phonetic spelling in `say`
+  ("HAZARD" → "해저드", "v2" → "브이 투") and keep the written form in the caption.
+- Name the source on screen, not in the voice ("Table 2" goes on the panel).
+
+## 8. Accuracy
+
+- Every number on screen is in `facts.md` with its source.
+- Illustrative values (anything the paper doesn't give) are labelled 예시 on
+  screen.
+- The caveats chapter is not optional: fair-comparison issues (e.g. the method
+  got fine-tuning the baselines didn't), how the metric is defined, test-set
+  size, missing variance.
+- Don't overclaim: say what the paper shows, in its setting.
+
+## 9. Checking
+
+Render a contact sheet (`render.py --sheet 24`) and look at it like a stranger:
+Is every caption readable over the picture? Does anything overlap? Is there a
+frame where the sentence talks about something not yet on screen? Then spot-check
+stills at each sentence start (`k.caps[i].t0` + 1 s).

@@ -1,0 +1,33 @@
+{
+  "title": "starter film: two scenes to copy from",
+  "lang": "ko",
+  "fps": 30,
+  "shared": [
+    "world.js"
+  ],
+  "scenes": [
+    {
+      "id": "room",
+      "chapter": "① 문제",
+      "captions": [
+        "불이 번지는 방에서 물건을 구해 내는 과제예요.",
+        "비싼 물건은 5점, 싼 물건은 1점이에요."
+      ]
+    },
+    {
+      "id": "formula",
+      "chapter": "① 문제",
+      "captions": [
+        "계획이 얼마나 낡았는지는 네 가지 변화를 가중해 더한 점수로 재요.",
+        "물체 변화에는 가치가 높을수록 큰 가중치를 줘요."
+      ]
+    },
+    {
+      "id": "chart",
+      "chapter": "② 결과",
+      "captions": [
+        "지연을 반영하면 순위가 뒤집혀요."
+      ]
+    }
+  ]
+}
