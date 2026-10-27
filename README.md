@@ -150,3 +150,7 @@ https://github.com/user-attachments/assets/c3926738-7376-4dc4-a5e2-92bd735e5d04
 만든 영상에는 강의 슬라이드와 그 안의 교재 그림이 그대로 들어가요. 개인 복습용이 아니라면 공개 업로드 전에 강의자의 허락을 받으세요.
 
 [↑ 맨 위로](#pdf2video)
+
+
+https://github.com/user-attachments/assets/8663691e-55b5-4586-b6be-d2ad302056c4
+
