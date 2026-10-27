@@ -1,5 +1,5 @@
 {
-  "name": "lecture-explainer-video",
+  "name": "lecture2video",
   "version": "1.0.0",
   "description": "Turn lecture slides (PDF) into short narrated review episodes on the real slides: highlights synced to a TTS voice, animations for the hardest ideas, check-yourself quizzes, soft subtitles and chapters, joinable into one MP4.",
   "author": { "name": "jangwon" },
