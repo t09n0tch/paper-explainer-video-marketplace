@@ -15,13 +15,11 @@ Claude Code에서:
 
 ## 사용법
 
-스킬 + 논문 url
-
 > **👤 사용자**
 >
 > ```
-> /paper-explainer-video:paper-explainer-video 
-> https://arxiv.org/abs/2607.00272
+> /paper-explainer-video:paper-explainer-video # 스킬
+> https://arxiv.org/abs/2607.00272 # 논문 url
 > ```
 
 > **🤖 Claude**
