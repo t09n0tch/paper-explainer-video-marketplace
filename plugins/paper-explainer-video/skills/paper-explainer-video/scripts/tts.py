@@ -59,6 +59,9 @@ def have_say_voice(lang):
         return None
     out = run(["say", "-v", "?"]).stdout
     tag = {"ko": "ko_KR", "en": "en_US", "ja": "ja_JP"}.get(lang, lang)
+    best = DEFAULT_VOICE["say"].get(lang)
+    if best and any(l.startswith(best + " ") and tag in l for l in out.splitlines()):
+        return best
     for line in out.splitlines():
         if tag in line:
             return line.split()[0]
