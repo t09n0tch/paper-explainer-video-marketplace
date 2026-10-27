@@ -15,17 +15,9 @@ Claude Code에서:
 
 설치 후 "이 논문 영상으로 만들어줘"라고 하면 됩니다. 업데이트는 `/plugin marketplace update paper-explainer`.
 
-## 예시: ASPIRE (NVIDIA, 2026)
+## 사용법
 
-[ASPIRE: Agentic Skills Discovery for Robotics](https://research.nvidia.com/labs/gear/aspire/assets/aspire.pdf) 논문으로 만든 6분 15초짜리 한국어 설명 영상입니다. 17개 장면, SunHi 음성, 1920×1080.
-
-[![ASPIRE 설명 영상 미리보기](examples/aspire/preview.jpg)](https://github.com/t09n0tch/paper-explainer-video-marketplace/releases/download/examples/aspire-film.mp4)
-
-▶ [영상 보기 (MP4, 22.6 MB)](https://github.com/t09n0tch/paper-explainer-video-marketplace/releases/download/examples/aspire-film.mp4) · [대본 narration.md](examples/aspire/narration.md) · [자막 narration.srt](examples/aspire/narration.srt)
-
-### 이렇게 요청했습니다
-
-사용자가 입력한 건 명령 한 줄과 질문 두 개에 대한 답이 전부입니다.
+스킬을 부르고 논문 링크만 주면 됩니다.
 
 > **👤 사용자**
 >
@@ -35,30 +27,27 @@ Claude Code에서:
 
 > **🤖 Claude**
 >
-> 논문 전체(부록 포함 41쪽)를 읽고, 화면에 쓸 수치와 출처(표·그림 번호)를 `facts.md`로 정리했습니다. 17개 장면의 대본을 쓰고, 그동안 이 컴퓨터에서 쓸 수 있는 음성 샘플을 만들었습니다. 그리고 두 가지를 물었습니다.
->
-> **어떤 목소리로 할까요?**
-> - SunHi (추천): Microsoft 신경망, 여성, 자연스러움 (인터넷 필요)
-> - InJoon: Microsoft 신경망, 남성
-> - Yuna: macOS 시스템 음성, 오프라인
->
-> **초안이 17개 장면, 약 6분입니다. 길이는 어떻게 할까요?**
-> - 약 5분으로 줄이기 (추천)
-> - 약 6분 그대로
+> 논문을 끝까지 읽고 대본을 썼어요. 두 가지만 골라 주세요.
+> - 목소리: SunHi (여성) · InJoon (남성) · …
+> - 길이: 초안 그대로 · 조금 줄이기
 
 > **👤 사용자**
 >
-> 목소리: **SunHi** · 길이: **6분 그대로**
+> SunHi, 그대로
 
 > **🤖 Claude**
 >
-> 모든 문장을 음성으로 만들고, 그 길이에 맞춰 장면을 하나씩 만들었습니다. 장면마다 스틸 컷을 찍어 자막 겹침, 잘린 글자, 숫자를 확인하고 고친 뒤 전체를 MP4로 내보냈습니다.
->
-> 결과물: `film.mp4`, `narration.srt`, `narration.md`, `facts.md`, `index.html`(브라우저 미리보기)
->
-> 영상에서 실제 값이 아닌 부분도 알렸습니다. 진화 탐색 장면의 후보 점수는 화면에 '예시'로 표시했고, 방 배치와 책 애니메이션은 단순화한 그림입니다.
+> 완성했어요. `film.mp4` · `narration.srt` (자막) · `narration.md` (대본)
 
-명령은 플러그인으로 설치했을 때 기준입니다. 슬래시 명령 없이 "이 논문 영상으로 만들어줘"와 함께 PDF 링크나 파일을 줘도 됩니다.
+"이 논문 영상으로 만들어줘"와 함께 PDF 링크나 파일을 줘도 됩니다. 질문에 답하지 않고 "알아서 해줘"라고 하면 추천값으로 끝까지 만듭니다.
+
+## 예시: ASPIRE (NVIDIA, 2026)
+
+위 대화 그대로 만든 영상입니다. [ASPIRE: Agentic Skills Discovery for Robotics](https://research.nvidia.com/labs/gear/aspire/assets/aspire.pdf) · 6분 15초 · 한국어
+
+https://github.com/user-attachments/assets/c3926738-7376-4dc4-a5e2-92bd735e5d04
+
+[고화질 다운로드 (1080p, 22.6 MB)](https://github.com/t09n0tch/paper-explainer-video-marketplace/releases/download/examples/aspire-film.mp4) · [대본](examples/aspire/narration.md) · [자막](examples/aspire/narration.srt)
 
 ## 필요한 것
 
