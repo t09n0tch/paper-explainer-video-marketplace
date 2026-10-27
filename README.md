@@ -134,6 +134,15 @@ https://github.com/user-attachments/assets/c3926738-7376-4dc4-a5e2-92bd735e5d04
 - 자막은 기본적으로 화면에 새기지 않고 **소프트 자막**(MP4 자막 트랙 + `.srt`)으로 넣어요. 화면에 새기려면 "자막을 화면에 넣어줘"라고 하면 돼요.
 - 여러 편은 `join.py`로 자막과 챕터("2편 · ① 밀도 추정")까지 함께 이어 붙여요.
 
+## 예시: 오토인코더와 VAE (머신러닝 강의, 슬라이드 30장)
+Model : Opus 5.5
+
+Beamer 강의자료 PDF 하나로 만든 다섯 편(차원 축소 → 밀도 추정 → ELBO → 학습과 생성 → 정리)을 하나로 이은 17분 영상이에요. 아래 미리보기는 용량 때문에 540p 저화질이에요.
+
+https://github.com/user-attachments/assets/8663691e-55b5-4586-b6be-d2ad302056c4
+
+[고화질 다운로드 (1080p, 122.8 MB)](https://github.com/t09n0tch/pdf2video/releases/download/examples/vae-lecture-film.mp4) · [대본](examples/vae-lecture/narration.md) · [자막](examples/vae-lecture/narration.srt) · [챕터](examples/vae-lecture/chapters.txt)
+
 ## 필요한 것
 
 | 도구 | 설치 |
