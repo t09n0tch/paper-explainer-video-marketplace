@@ -1,0 +1,913 @@
+{
+ "paper": "arXiv 2506.01939v2 (arXiv non-exclusive license: no figures reused, all visuals redrawn)",
+ "claims": [
+  {
+   "id": "c01",
+   "kind": "quote",
+   "used_in": [
+    "intro.0",
+    "intro.1",
+    "forks.3",
+    "outro.0"
+   ],
+   "text": "CoT에서 소수 토큰만 고엔트로피, 이들이 추론 경로의 갈림길",
+   "quote": "we observe that only a small fraction of tokens exhibit high entropy, and these tokens act as critical forks that steer the model toward diverse reasoning pathways"
+  },
+  {
+   "id": "c02",
+   "kind": "quote",
+   "used_in": [
+    "intro.2",
+    "results.3"
+   ],
+   "text": "상위 20% 토큰만으로 전체 그래디언트와 비슷하거나(8B) 더 나은 성능(14B, 32B)",
+   "quote": "utilizing only 20% of the tokens while maintaining performance comparable to full-gradient updates"
+  },
+  {
+   "id": "c03",
+   "kind": "quote",
+   "used_in": [
+    "rlvr.0"
+   ],
+   "text": "RLVR은 검증 가능한 보상으로 추론을 강화하는 강화학습",
+   "quote": "approach to enhancing the reasoning capabilities of Large Language Models (LLMs)"
+  },
+  {
+   "id": "c04",
+   "kind": "quote",
+   "used_in": [
+    "rlvr.1"
+   ],
+   "text": "정답이면 보상 1.0",
+   "quote": "if is_equivalent( a, oi ),",
+   "values": [
+    "1.0"
+   ]
+  },
+  {
+   "id": "c05",
+   "kind": "quote",
+   "used_in": [
+    "rlvr.1"
+   ],
+   "text": "그 외에는 보상 0.0",
+   "quote": "std({ R }i=1 ) 0.0 otherwise.",
+   "values": [
+    "0.0"
+   ]
+  },
+  {
+   "id": "c06",
+   "kind": "quote",
+   "used_in": [
+    "rlvr.2",
+    "rlvr.3"
+   ],
+   "text": "기존 구현은 모든 토큰을 학습",
+   "quote": "existing implementations directly train over all tokens with limited understanding of which tokens actually facilitate reasoning"
+  },
+  {
+   "id": "c07",
+   "kind": "quote",
+   "used_in": [
+    "rlvr.2",
+    "mask.3"
+   ],
+   "text": "DAPO를 기준선으로 사용",
+   "quote": "In this work, we use DAPO as the baseline for our RLVR experiments."
+  },
+  {
+   "id": "c08",
+   "kind": "quote",
+   "used_in": [
+    "entropy.0",
+    "entropy.1"
+   ],
+   "text": "토큰 엔트로피 정의, 식 (1)",
+   "quote": "The token-level generation entropy (referred to as token entropy for brevity) for token t is defined as"
+  },
+  {
+   "id": "c09",
+   "kind": "example",
+   "used_in": [
+    "entropy.2"
+   ],
+   "text": "두 분포의 후보 토큰과 확률 막대는 설명용 예시",
+   "on_screen_label": "확률은 설명용 예시"
+  },
+  {
+   "id": "c10",
+   "kind": "quote",
+   "used_in": [
+    "pattern.0"
+   ],
+   "text": "Qwen3-8B로 AIME'24, '25 응답 생성, 10^6 = 1000000 개 넘는 토큰 (pypdf가 10^6 을 106 으로 추출)",
+   "quote": "we use Qwen3-8B (Yang et al., 2025), one of the most recent and capable reasoning models within a comparable parameter scale, to generate responses for queries from AIME’24 and AIME’25"
+  },
+  {
+   "id": "c11",
+   "kind": "quote",
+   "used_in": [
+    "pattern.1",
+    "pattern.2",
+    "temp.1"
+   ],
+   "text": "50.64% 가 10^-2 미만, 상위 20% 는 0.672 초과",
+   "quote": "the entropy of over half the tokens (approximately 50.64%) is below 10−2 , while only 20% of tokens have entropy greater than 0.672",
+   "values": [
+    "50.64",
+    "10^-2",
+    "0.672",
+    "20"
+   ]
+  },
+  {
+   "id": "c12",
+   "kind": "derived",
+   "used_in": [
+    "pattern.1"
+   ],
+   "text": "10^-2 = 0.01",
+   "from": [
+    "c11"
+   ],
+   "derivation": "10^-2 = 0.01",
+   "on_screen_label": "10의 −2제곱 = 0.01"
+  },
+  {
+   "id": "c13",
+   "kind": "example",
+   "used_in": [
+    "pattern.0",
+    "pattern.1",
+    "pattern.2",
+    "pattern.3"
+   ],
+   "text": "100칸 격자는 비율을 보여 주는 그림, 높이는 예시",
+   "values": [
+    "100"
+   ],
+   "on_screen_label": "100칸 = 측정한 토큰의 비율 · 높이는 예시"
+  },
+  {
+   "id": "c14",
+   "kind": "quote",
+   "used_in": [
+    "forks.0",
+    "forks.1"
+   ],
+   "text": "고엔트로피 토큰: wait, however, thus, suppose, since, because; 빈도 100회 초과 토큰 중",
+   "quote": "High-entropy tokens often act as logical connectors within and across sentences, such as \"wait,\" \"however,\" and \"unless\" (indicating contrasts or shifts), \"thus\" and \"also\" (showing progression or addition), or \"since\" and \"because\" (expressing causality)"
+  },
+  {
+   "id": "c15",
+   "kind": "quote",
+   "used_in": [
+    "forks.0"
+   ],
+   "text": "빈도 100 초과 토큰만",
+   "quote": "we only consider tokens with frequencies above 100",
+   "values": [
+    "100"
+   ]
+  },
+  {
+   "id": "c16",
+   "kind": "quote",
+   "used_in": [
+    "forks.1"
+   ],
+   "text": "suppose 등",
+   "quote": "tokens like \"suppose,\" \"assume,\" \"given,\" and \"define\" frequently appear in mathematical derivations"
+  },
+  {
+   "id": "c17",
+   "kind": "quote",
+   "used_in": [
+    "forks.2"
+   ],
+   "text": "저엔트로피: 단어 접미사, 코드 조각, 수식 구성 요소",
+   "quote": "low-entropy tokens are often word suffixes, source code fragments, or mathematical expression components, all of which exhibit high determinism"
+  },
+  {
+   "id": "c18",
+   "kind": "example",
+   "used_in": [
+    "intro.0",
+    "intro.1",
+    "forks.0",
+    "forks.1",
+    "forks.2",
+    "forks.3",
+    "intro.2",
+    "rlvr.0",
+    "rlvr.1",
+    "rlvr.2",
+    "rlvr.3",
+    "ablation.0",
+    "ablation.1",
+    "ablation.2",
+    "ablation.3",
+    "outro.0",
+    "outro.1",
+    "change.0",
+    "change.1",
+    "change.2"
+   ],
+   "text": "길 위 토큰은 부록 그림 13 풀이에서 가져옴, 각 토큰의 높이(엔트로피)는 예시",
+   "values": [
+    "13"
+   ],
+   "on_screen_label": "토큰은 부록 그림 13의 풀이에서 · 높이는 예시"
+  },
+  {
+   "id": "c19",
+   "kind": "quote",
+   "used_in": [
+    "forks.3"
+   ],
+   "text": "고엔트로피 토큰 = 포킹 토큰",
+   "quote": "we refer to high-entropy tokens as \"forking tokens\""
+  },
+  {
+   "id": "c20",
+   "kind": "quote",
+   "used_in": [
+    "temp.0",
+    "temp.1"
+   ],
+   "text": "포킹 토큰과 나머지에 다른 디코딩 온도",
+   "quote": "we assign different decoding temperatures to the forking tokens and the other tokens in the evaluation on AIME 2024 and AIME 2025",
+   "values": [
+    "2024",
+    "2025"
+   ]
+  },
+  {
+   "id": "c21",
+   "kind": "quote",
+   "used_in": [
+    "temp.1"
+   ],
+   "text": "문턱값 0.672 = 80번째 백분위",
+   "quote": "is estimated by calculating the 80th percentile",
+   "values": [
+    "0.672",
+    "80"
+   ]
+  },
+  {
+   "id": "c22",
+   "kind": "quote",
+   "used_in": [
+    "temp.2"
+   ],
+   "text": "갈림길(T_high) 온도를 낮추면 크게 하락 — 그림 3: T_high 감소가 T_low 감소보다 크게 하락",
+   "quote": "Thigh significantly degrades"
+  },
+  {
+   "id": "c23",
+   "kind": "quote",
+   "used_in": [
+    "temp.3"
+   ],
+   "text": "T_high 올리기가 T_low 올리기보다 훨씬 나음, T_low 를 올리면 무의미한 출력",
+   "quote": "Thigh results in substantially better performance than increasing"
+  },
+  {
+   "id": "c24",
+   "kind": "quote",
+   "used_in": [
+    "overlap.0"
+   ],
+   "text": "Qwen3-14B base에 DAPO",
+   "quote": "we apply DAPO (Yu et al., 2025) to the Qwen3-14B base model",
+   "values": [
+    "14"
+   ]
+  },
+  {
+   "id": "c25",
+   "kind": "quote",
+   "used_in": [
+    "overlap.1"
+   ],
+   "text": "상위 20% 고엔트로피 위치의 겹침 비율",
+   "quote": "We then calculate the overlap ratio (i.e., the fraction of shared top 20% high-entropy positions) between each intermediate model and both the base and final RLVR models",
+   "values": [
+    "20"
+   ]
+  },
+  {
+   "id": "c26",
+   "kind": "table",
+   "used_in": [
+    "overlap.1",
+    "overlap.2"
+   ],
+   "text": "기본 모델 대비 겹침: Step 0 100%, 160 93.04%, 864 87.45%, 1360 86.67%",
+   "table": "Table 1",
+   "row": "Base Model",
+   "values": [
+    "100%",
+    "93.04%",
+    "87.45%",
+    "86.67%"
+   ]
+  },
+  {
+   "id": "c27",
+   "kind": "table",
+   "used_in": [
+    "overlap.1"
+   ],
+   "text": "최종 RLVR 모델 대비 Step 0 86.67%",
+   "table": "Table 1",
+   "row": "RLVR Model",
+   "values": [
+    "86.67%",
+    "100%"
+   ]
+  },
+  {
+   "id": "c28",
+   "kind": "quote",
+   "used_in": [
+    "overlap.2",
+    "overlap.3"
+   ],
+   "text": "수렴(Step 1360) 후에도 86% 넘게 겹침 → 기본 모델 패턴 유지",
+   "quote": "the base model’s overlap still remains above 86% at convergence (step 1360), suggesting that RLVR largely retains the base model’s entropy patterns",
+   "values": [
+    "1360",
+    "160",
+    "864"
+   ]
+  },
+  {
+   "id": "c29",
+   "kind": "example",
+   "used_in": [
+    "overlap.0",
+    "overlap.1",
+    "overlap.2",
+    "overlap.3"
+   ],
+   "text": "행마다 갈림길이 놓인 칸과 이동한 칸은 예시",
+   "on_screen_label": "Table 1 일부 · 행 배치와 이동한 칸은 예시"
+  },
+  {
+   "id": "c30",
+   "kind": "quote",
+   "used_in": [
+    "change.0",
+    "change.1"
+   ],
+   "text": "5% 백분위 구간별 평균 엔트로피 변화, 높을수록 크게 증가",
+   "quote": "Tokens with higher initial entropy tend to experience greater entropy increases after RLVR.",
+   "values": [
+    "5"
+   ]
+  },
+  {
+   "id": "c31",
+   "kind": "quote",
+   "used_in": [
+    "change.2"
+   ],
+   "text": "저엔트로피 토큰은 좁은 범위에서만 변동",
+   "quote": "RLVR primarily adjusts the entropy of high-entropy tokens, while the entropy of low-entropy tokens fluctuates only within a narrow range"
+  },
+  {
+   "id": "c32",
+   "kind": "example",
+   "used_in": [
+    "change.1",
+    "change.2"
+   ],
+   "text": "기둥이 자라는 폭은 예시",
+   "on_screen_label": "증가 폭은 예시"
+  },
+  {
+   "id": "c33",
+   "kind": "quote",
+   "used_in": [
+    "method.0",
+    "method.1",
+    "method.2"
+   ],
+   "text": "식 (4) 대비 차이: (i) 어드밴티지에 지시 함수, (ii) 정규화 항",
+   "quote": "(ii) The normalization term for the number of tokens is adjusted to"
+  },
+  {
+   "id": "c34",
+   "kind": "quote",
+   "used_in": [
+    "method.1",
+    "mask.1"
+   ],
+   "text": "배치 안 상위 ρ 비율 토큰만",
+   "quote": "comprising the top-ρ fraction of all tokens in the batch, are used to compute the gradient"
+  },
+  {
+   "id": "c35",
+   "kind": "quote",
+   "used_in": [
+    "method.3",
+    "mask.1",
+    "mask.2",
+    "results.3",
+    "outro.1"
+   ],
+   "text": "상위 20%만 그래디언트, 나머지 80% 마스킹",
+   "quote": "retaining policy gradient updates for only 20% of tokens with the highest entropy and masking gradients of the remaining 80%",
+   "values": [
+    "20",
+    "80"
+   ]
+  },
+  {
+   "id": "c36",
+   "kind": "quote",
+   "used_in": [
+    "method.3"
+   ],
+   "text": "주 실험 ρ = 20%",
+   "quote": "For main results, we set ρ = 20% in Equation (6)",
+   "values": [
+    "20"
+   ]
+  },
+  {
+   "id": "c37",
+   "kind": "example",
+   "used_in": [
+    "mask.0",
+    "mask.1",
+    "mask.2",
+    "mask.3"
+   ],
+   "text": "배치 그림의 토큰 높이는 예시",
+   "on_screen_label": "한 줄 = 한 응답 · 엔트로피 높이는 예시"
+  },
+  {
+   "id": "c38",
+   "kind": "quote",
+   "used_in": [
+    "mask.3"
+   ],
+   "text": "eps_high 0.28, eps_low 0.2, 최대 길이 20480",
+   "quote": "we apply the same hyperparameters as recommended by DAPO: for clip-higher, ϵhigh = 0.28, ϵlow = 0.2; for overlong reward shaping, the maximum response length is 20480",
+   "values": [
+    "0.28",
+    "0.2",
+    "20480"
+   ]
+  },
+  {
+   "id": "c39",
+   "kind": "quote",
+   "used_in": [
+    "mask.3"
+   ],
+   "text": "배치 512",
+   "quote": "we use a training batch size of 512",
+   "values": [
+    "512"
+   ]
+  },
+  {
+   "id": "c40",
+   "kind": "quote",
+   "used_in": [
+    "mask.3"
+   ],
+   "text": "KL 손실과 엔트로피 손실 없음",
+   "quote": "the training process excludes both KL divergence loss and entropy loss"
+  },
+  {
+   "id": "c41",
+   "kind": "quote",
+   "used_in": [
+    "mask.3"
+   ],
+   "text": "학습 데이터 DAPO-Math-17K",
+   "quote": "using DAPO-Math-17K (Yu et al., 2025) as the training dataset",
+   "values": [
+    "17"
+   ]
+  },
+  {
+   "id": "c42",
+   "kind": "quote",
+   "used_in": [
+    "results.0",
+    "caveats.3"
+   ],
+   "text": "벤치마크당 16회 평균 Acc@16",
+   "quote": "\"Acc@16\" and \"Len@16\" denotes the average accuracy and response length over 16 evaluations per benchmark",
+   "values": [
+    "16"
+   ]
+  },
+  {
+   "id": "c43",
+   "kind": "table",
+   "used_in": [
+    "results.1",
+    "scaling.2"
+   ],
+   "text": "32B AIME'24 55.83 → 63.54",
+   "table": "Table 2",
+   "row": "AIME’24",
+   "values": [
+    "55.83",
+    "63.54",
+    "+7.71"
+   ]
+  },
+  {
+   "id": "c44",
+   "kind": "table",
+   "used_in": [
+    "results.1"
+   ],
+   "text": "32B AIME'25 45.63 → 56.67",
+   "table": "Table 2",
+   "row": "AIME’25",
+   "values": [
+    "45.63",
+    "56.67",
+    "+11.04"
+   ]
+  },
+  {
+   "id": "c45",
+   "kind": "table",
+   "used_in": [
+    "results.2"
+   ],
+   "text": "14B AIME'24 45.21 → 50.42 (+5.21)",
+   "table": "Table 2",
+   "row": "AIME’24",
+   "values": [
+    "45.21",
+    "50.42",
+    "+5.21"
+   ]
+  },
+  {
+   "id": "c46",
+   "kind": "table",
+   "used_in": [
+    "results.2"
+   ],
+   "text": "14B AIME'25 38.13 → 42.92 (+4.79)",
+   "table": "Table 2",
+   "row": "AIME’25",
+   "values": [
+    "38.13",
+    "42.92",
+    "+4.79"
+   ]
+  },
+  {
+   "id": "c47",
+   "kind": "table",
+   "used_in": [
+    "results.3"
+   ],
+   "text": "8B AIME'24 33.33 → 34.58",
+   "table": "Table 2",
+   "row": "AIME’24",
+   "values": [
+    "33.33",
+    "34.58",
+    "+1.25"
+   ]
+  },
+  {
+   "id": "c48",
+   "kind": "table",
+   "used_in": [
+    "results.3"
+   ],
+   "text": "8B AIME'25 25.42 → 26.25",
+   "table": "Table 2",
+   "row": "AIME’25",
+   "values": [
+    "25.42",
+    "26.25",
+    "+0.83"
+   ]
+  },
+  {
+   "id": "c49",
+   "kind": "table",
+   "used_in": [
+    "scaling.0",
+    "scaling.1"
+   ],
+   "text": "평균 향상 8B +0.53",
+   "table": "Table 2",
+   "row": "Average",
+   "values": [
+    "53.71",
+    "54.23",
+    "+0.53"
+   ]
+  },
+  {
+   "id": "c50",
+   "kind": "table",
+   "used_in": [
+    "scaling.0",
+    "scaling.1"
+   ],
+   "text": "평균 향상 14B +2.99",
+   "table": "Table 2",
+   "row": "Average",
+   "values": [
+    "61.40",
+    "64.39",
+    "+2.99"
+   ]
+  },
+  {
+   "id": "c51",
+   "kind": "table",
+   "used_in": [
+    "scaling.0",
+    "scaling.1",
+    "caveats.2"
+   ],
+   "text": "평균 향상 32B +4.10, 평균 길이 5848.80 → 7227.03 (+1378.22 → 화면·자막에는 1378)",
+   "table": "Table 2",
+   "row": "Average",
+   "values": [
+    "66.59",
+    "5848.80",
+    "70.69",
+    "7227.03",
+    "+4.10",
+    "+1378.22"
+   ]
+  },
+  {
+   "id": "c52",
+   "kind": "quote",
+   "used_in": [
+    "scaling.0"
+   ],
+   "text": "6개 벤치마크",
+   "quote": "We evaluate our models on 6 standard mathematical reasoning benchmarks",
+   "values": [
+    "6"
+   ]
+  },
+  {
+   "id": "c53",
+   "kind": "quote",
+   "used_in": [
+    "scaling.2"
+   ],
+   "text": "최대 길이 20480 → 29696, AIME'24 63.54 → 68.12",
+   "quote": "the AIME’24 scores improve further from 63.54 to 68.12",
+   "values": [
+    "20480",
+    "29696",
+    "63.54",
+    "68.12"
+   ]
+  },
+  {
+   "id": "c54",
+   "kind": "quote",
+   "used_in": [
+    "scaling.2"
+   ],
+   "text": "최대 길이 29696",
+   "quote": "trained from the Qwen3-32B base model—to 29696",
+   "values": [
+    "29696"
+   ]
+  },
+  {
+   "id": "c55",
+   "kind": "quote",
+   "used_in": [
+    "ablation.0",
+    "ablation.1"
+   ],
+   "text": "하위 80%만 쓰면 큰 하락 (그림 7(a)(b), Qwen3-8B)",
+   "quote": "retaining only the bottom 80% of tokens with low entropy during RLVR leads to a substantial decline in performance, even though these tokens account for 80% of the total token count used in training",
+   "values": [
+    "80"
+   ]
+  },
+  {
+   "id": "c56",
+   "kind": "quote",
+   "used_in": [
+    "ablation.2"
+   ],
+   "text": "ρ를 10%, 50%, 100%로 바꾸면 전체 엔트로피가 계속 낮음",
+   "quote": "adjusting the ratio ρ from 20% to either 10%, 50%, or 100% leads to persistently lower overall entropy starting from the early training phase",
+   "values": [
+    "10",
+    "50",
+    "100",
+    "20"
+   ]
+  },
+  {
+   "id": "c57",
+   "kind": "quote",
+   "used_in": [
+    "ablation.3"
+   ],
+   "text": "상위 20% 정도가 탐색과 안정성 균형 (저자 해석)",
+   "quote": "focusing on a subset of high-entropy tokens, approximately 20% in our experiments, strikes an effective balance between exploration and training stability in RLVR",
+   "values": [
+    "20"
+   ]
+  },
+  {
+   "id": "c58",
+   "kind": "quote",
+   "used_in": [
+    "discuss.0"
+   ],
+   "text": "엔트로피 보너스는 저엔트로피 다수까지 올려 비효율",
+   "quote": "In RLVR, entropy bonus may be suboptimal, as it increases the entropy of low-entropy majority tokens."
+  },
+  {
+   "id": "c59",
+   "kind": "quote",
+   "used_in": [
+    "discuss.1"
+   ],
+   "text": "clip-higher 는 고엔트로피 토큰을 더 겨냥",
+   "quote": "clip-higher effectively promotes entropy in high-entropy minority tokens"
+  },
+  {
+   "id": "c60",
+   "kind": "quote",
+   "used_in": [
+    "discuss.2"
+   ],
+   "text": "RL은 갈림길 엔트로피 유지·증가, SFT는 one-hot으로 몰아 낮춤",
+   "quote": "RL tends to preserve or even increase the entropy of forking tokens, maintaining the flexibility of reasoning paths. In contrast, SFT pushes output logits towards one-hot distributions"
+  },
+  {
+   "id": "c61",
+   "kind": "quote",
+   "used_in": [
+    "discuss.3"
+   ],
+   "text": "일반화 차이의 원인일 수 있다는 가설",
+   "quote": "We hypothesize that one critical factor underlying the differing generalization capabilities of RL and SFT may be related to entropy in forking tokens."
+  },
+  {
+   "id": "c62",
+   "kind": "example",
+   "used_in": [
+    "discuss.0",
+    "discuss.1",
+    "discuss.2",
+    "discuss.3"
+   ],
+   "text": "보너스·clip-higher·SFT 에 따른 높이 변화는 개념도",
+   "on_screen_label": "높이 변화는 개념도"
+  },
+  {
+   "id": "c63",
+   "kind": "quote",
+   "used_in": [
+    "caveats.0"
+   ],
+   "text": "Llama-3.1-8B: DAPO 학습 정확도 약 1%, Qwen3-32B 답으로 콜드스타트 SFT",
+   "quote": "it achieves very low accuracy (approximately 1%) on the training dataset",
+   "values": [
+    "1",
+    "3.1",
+    "8"
+   ]
+  },
+  {
+   "id": "c64",
+   "kind": "quote",
+   "used_in": [
+    "caveats.0"
+   ],
+   "text": "콜드스타트 SFT 후 실험, 저자도 덜 설득력 있다고 함",
+   "quote": "we believe the results on Llama-3.1-8B are less convincing compared to those observed on the Qwen3 models"
+  },
+  {
+   "id": "c65",
+   "kind": "quote",
+   "used_in": [
+    "caveats.1"
+   ],
+   "text": "20% 비율은 다른 설정에서 조정 필요할 수 있음",
+   "quote": "the effective proportion of 20% observed in our experiments may need to be adjusted to a different value to achieve optimal results",
+   "values": [
+    "20"
+   ]
+  },
+  {
+   "id": "c66",
+   "kind": "quote",
+   "used_in": [
+    "caveats.2"
+   ],
+   "text": "갈림길 토큰만 쓰면 응답 길이 증가",
+   "quote": "using only the top 20% high-entropy tokens increases response length across all model sizes"
+  },
+  {
+   "id": "c67",
+   "kind": "opinion",
+   "used_in": [
+    "caveats.3"
+   ],
+   "text": "학습 반복(시드) 간 편차는 본문에 보고되지 않음 — 제작자 판단",
+   "on_screen_label": "내 판단"
+  },
+  {
+   "id": "c68",
+   "kind": "quote",
+   "used_in": [
+    "outro.1"
+   ],
+   "text": "모델이 클수록 효과 증가",
+   "quote": "As model size increases, the strategy of selecting high-entropy tokens appears to scale effectively."
+  },
+  {
+   "id": "c69",
+   "kind": "quote",
+   "used_in": [
+    "outro.0"
+   ],
+   "text": "NeurIPS 2025 채택",
+   "quote": "Accepted to NeurIPS 2025.",
+   "values": [
+    "2025"
+   ]
+  },
+  {
+   "id": "c70",
+   "kind": "quote",
+   "used_in": [
+    "results.0"
+   ],
+   "text": "Qwen3-32B, 14B, 8B 베이스 모델에서 비교",
+   "quote": "evaluated on the Qwen3-32B, Qwen3-14B and Qwen3",
+   "values": [
+    "32",
+    "14",
+    "8"
+   ]
+  },
+  {
+   "id": "c71",
+   "kind": "quote",
+   "used_in": [
+    "temp.3"
+   ],
+   "text": "T_low 를 올리면 무의미한 출력까지; 갈림길 토큰은 더 높은 온도가 유리",
+   "quote": "generating nonsensical outputs. These results suggest that forking tokens benefit from being assigned a relatively higher temperature"
+  },
+  {
+   "id": "c72",
+   "kind": "opinion",
+   "used_in": [
+    "caveats.2"
+   ],
+   "text": "응답이 길어지면 추론 비용도 늘어난다 — 제작자 판단",
+   "on_screen_label": "추론 비용도 그만큼 듦 (내 판단)"
+  }
+ ],
+ "allow_numbers": {
+  "2": "figure number (그림 2)",
+  "3": "equation/section number and the Qwen3 model family name",
+  "4": "equation/figure number",
+  "5": "equation/figure number",
+  "6": "equation/section number",
+  "7": "figure number",
+  "10": "figure number (그림 10)",
+  "13": "appendix figure number (부록 그림 13)",
+  "5.2": "section number (5.2절)",
+  "2506.01939": "arXiv id",
+  "24": "AIME 2024 benchmark name (AIME’24)",
+  "25": "AIME 2025 benchmark name (AIME’25)",
+  "8": "model size in a model name (Qwen3-8B, Llama-3.1-8B)",
+  "14": "model size in a model name (Qwen3-14B)",
+  "32": "model size in a model name (Qwen3-32B)",
+  "17": "dataset name DAPO-Math-17K",
+  "3.1": "model name Llama-3.1",
+  "16": "Acc@16 metric name",
+  "1": "indicator values and equation constants (1 − ε)",
+  "0": "indicator value / gradient 0",
+  "-2": "exponent in 10의 −2제곱 (10^-2, claim c11)"
+ }
+}

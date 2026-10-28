@@ -240,6 +240,27 @@ blocks.forEach((b) => {
 Waiting/thinking blocks: outlined in `--main`; doing blocks: filled `--accent`;
 a correction: a short `--main` arrow between lanes at the moment it happens.
 
+## 2c. Pattern: an abstract world (not a room)
+
+Most papers need a world built from their own subject (`references/craft.md`, "The world is the paper's
+subject"). The pieces are a few meshes reused everywhere; `--example forks` ships them in `world.js` as
+`window.FORK`:
+
+```js
+// a tile whose height carries the paper's quantity; base at z = 0 so scaling grows it upward
+const g = new THREE.BoxGeometry(0.92, 1, 0.92); g.translate(0, 0.5, 0);
+const m = new THREE.Mesh(g, new THREE.MeshStandardMaterial({ color: T3.color('accent'), emissive: T3.color('accent'), emissiveIntensity: 0.4 }));
+m.scale.y = 0.12 + 3.0 * h; m.position.copy(T3.v3(x, y, 0));
+// a beam (gradient, signal, attention) falling from the sky onto it: an open cylinder with AdditiveBlending,
+// bottom lerped from top + 7 down to the tile's top by p; a RingGeometry on the tile when it lands
+// a threshold: a translucent PlaneGeometry plus EdgesGeometry outline, raised with .position (the cut)
+// alternatives / branches: T3.route(points) ribbons, grown with .progress(p)
+```
+
+Signature moves built from these: tiles sorting from shuffled to ranked (lerp each tile between two grid
+cells), a plane rising to a percentile cut and only tiles above it lighting up, several copies of the same
+row stacked in depth to compare checkpoints, heights growing with a wireframe ghost of the old height.
+
 ## 7. Pitfalls
 
 - **Shared code between scenes:** put it in a file in the film folder (say
@@ -253,6 +274,9 @@ a correction: a short `--main` arrow between lanes at the moment it happens.
   boxes explicit widths, and check stills on the machine that exports.
 - **Numbers that count up** start near their final value, or a still shows
   "0.00" at the moment the narrator says the number.
+- **3D handedness: look from the +y side.** `T3.v3` maps world (x, y, z) to three.js (x, z, y), which flips
+  handedness: from a camera at negative y, x runs right-to-left and a left-to-right sequence reads backwards.
+  Put the camera at positive y (`v.look([x, +15, 9], [x', 0, 0])`) for anything with a reading order.
 - **3D: render, then place labels.** `v.at()` uses the camera of the last `look`/`orbit`;
   call `v.draw()` once per frame, at the end of the 3D updates.
 - **The checker reads the screen.** The player records every string that holds on
