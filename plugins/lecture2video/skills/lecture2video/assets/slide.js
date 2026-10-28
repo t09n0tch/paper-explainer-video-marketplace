@@ -11,6 +11,8 @@
  * zoom: 'fit' (default, capped at maxZoom), 1 (whole slide) or a number.
  */
 window.SLIDE = function (id, o) {
+  // the page and marks, for check_claims.py (written into verify/onscreen.json by render.py)
+  (window.SLIDE_CFG = window.SLIDE_CFG || {})[id] = { page: o.page, steps: o.steps.map((s) => ({ cap: s.cap, box: s.box, mark: s.mark || '' })) };
   const SW = 1680, SH = 945, SX = 120, SY = 105, NS = 'http://www.w3.org/2000/svg';
   const maxZoom = o.maxZoom || 1;  // whole slide by default; zoom only when a scene asks
   // keep the whole frame on the slide: clamp the centre by what the frame shows at zoom z

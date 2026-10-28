@@ -1,6 +1,7 @@
 ---
 name: lecture2video
-description: Turn lecture material (slide-deck PDF such as Beamer or PowerPoint exports, lecture notes, optionally a PPTX with speaker notes) into a series of short narrated explainer videos, one per section, that walk through the real slides with highlights, a TTS voice, hand-built animations for the hardest ideas, board-style equations, pause-and-think quizzes, soft subtitles and chapter markers, exported as MP4. Use this skill whenever the user wants course slides, 강의자료, 수업 PDF, 강의 슬라이드 or 강의노트 turned into a video, lecture video, review video, study video or animation (강의 영상, 복습 영상, 강의 요약 영상, "이 강의자료 영상으로 만들어줘"), or wants to continue or redo such an episode, even if they never say "skill". For a single research paper use paper2video instead. Korean by default; works for other languages.
+description: Turn lecture material (slide-deck PDF such as Beamer or PowerPoint exports, lecture notes, optionally a PPTX with speaker notes) into a complete series of short narrated explainer videos, one per section, made end to end without stopping between episodes, that walk through the real slides with highlights, a TTS voice, hand-built animations for the hardest ideas, board-style equations, pause-and-think quizzes, soft subtitles and chapter markers, exported as MP4. Use this skill whenever the user wants course slides, 강의자료, 수업 PDF, 강의 슬라이드 or 강의노트 turned into a video, lecture video, review video, study video or animation (강의 영상, 복습 영상, 강의 요약 영상, "이 강의자료 영상으로 만들어줘"), or wants to continue or redo such an episode, even if they never say "skill". For a single research paper use paper2video instead. Korean by default; works for other languages.
+allowed-tools: Bash(python3 ${CLAUDE_SKILL_DIR}/scripts/l2v.py *)
 ---
 
 # Lecture explainer video
@@ -27,18 +28,44 @@ One folder per episode (default `./<course-short-name>-ep01/` and so on):
 - `narration.srt`, `narration.md`: subtitles and the timed script
 - `chapters.txt`: timestamps for a YouTube description
 - `index.html`: interactive preview (needs the folder next to it)
+- `claims.json` and `VERIFY.md`: every fact and formula with its slide page (or marked 보충), and
+  the independent verifier's verdict (`references/verification.md`)
 
 Plus, once for the whole lecture, `lecture-map.md` (step 2).
 
 ## Workflow
 
+Every step is one command, `l2v` (type it exactly like this, with the full path, so the
+pre-approved permission matches and no prompt interrupts the run):
+
+```bash
+python3 ${CLAUDE_SKILL_DIR}/scripts/l2v.py <command> ep01/ ...
+```
+
+Below, `l2v X` is short for that line. Start with `l2v doctor`. If it ends with
+`-> run: ... setup`, tell the user "first run: installing the toolchain (~1.5 GB, a few
+minutes)" and run `l2v setup` once with the Bash tool's maximum timeout (600000 ms). The
+toolchain and voice models are shared with paper2video, so if that skill is set up this
+only adds pymupdf. `l2v smoke` runs the whole chain on the starter episode and must end
+with ALL PASS; run it if anything looks broken.
+
+**Make the whole series in one go.** Once the material is in hand, plan every episode
+and build them one after another, each through steps 2-6 and its own verification, then
+deliver them all together (step 7). Don't stop to ask between steps or between episodes:
+no "here is episode 1, shall I continue?", no script approval. The independent verifier
+(step 6) is the check, and it doesn't need the user. Stop early only when the user asks
+for a single episode or a slide range, or when something blocks every episode (the PDF has
+no text layer, the toolchain fails twice). An episode that ends BLOCKED after 3 verifier
+rounds doesn't stop the series: note it and move on to the next one.
+
 ### 1. Intake
 
-Ask only what you can't infer, and use the defaults otherwise:
+Ask only what you can't infer, and use the defaults otherwise. Ask once, at the start,
+and only if the answer changes the plan; never between episodes:
 
 - the material (PDF; a PPTX if they have one, since its speaker notes are the best
   source for narration; a class recording transcript if any)
-- which part (default: propose an episode plan and start with episode 1)
+- which part (default: the whole deck, every episode in the plan)
 - audience (default: students taking the course, reviewing after class)
 - narration language (default Korean; slides in English stay in English on screen)
 - burned-in captions or soft subtitles (default soft; see craft.md §6)
@@ -46,9 +73,8 @@ Ask only what you can't infer, and use the defaults otherwise:
 ### 2. Read the deck and make the lecture map
 
 ```bash
-S=<this skill's folder>/scripts
-python $S/new_film.py ep01/ --starter        # player, engine, slide scene, example scenes
-python $S/slides.py lecture.pdf ep01/        # page images, slides.json, contact sheets
+l2v new ep01/ --starter            # player, engine, slide scene, example scenes
+l2v slides lecture.pdf ep01/       # page images, slides.json, contact sheets
 ```
 
 Look at the contact sheets (`slides/sheet_*.png`) and then at each page image you
@@ -89,8 +115,16 @@ Write `script.json` (format below) following `references/craft.md`: hook, learni
 goals, then the slides in order, one check question with its answer, a short wrap-up
 pointing to the next episode. Each sentence 5–8 s spoken, 2–4 sentences per scene.
 
-Run `python $S/timeline.py ep01/` and show the user the plan, the triage and
-`narration.md` before building anything. Text is cheap to change; scenes are not.
+Then write `claims.json` (format in `references/verification.md`): every fact, number and
+formula the episode says or shows, each with the slide page it comes from and a quote from
+that page's text in `slides.json`, or marked `supplement` (보충: the gaps the narration fills,
+the check question, intuitions, textbook facts) with its reason or source. Run `l2v check
+ep01/`: captions and `say` lines must be FAIL 0, WARN 0 before you build scenes.
+
+Run `l2v timeline ep01/` and read `narration.md` yourself before building scenes: text is
+cheap to change, scenes are not. Don't wait for the user's approval of the plan or the
+script; carry on to the next step. (If the user asked to review the script first, show it
+then and wait.)
 
 ```json
 {
@@ -114,27 +148,32 @@ written form. Per scene: `slide` (page number, documentation only), `hold`,
 ### 4. Voice and time
 
 ```bash
-python $S/tts.py ep01/               # voice every line (default voice unless told otherwise)
-python $S/timeline.py ep01/          # re-time from the real speech
+l2v voice ep01/        # voice every line (default voice unless told otherwise), then re-time from the real speech
 ```
 
-The default voice is Microsoft's neural `ko-KR-SunHiNeural` (edge-tts); if it is
-missing or fails, `tts.py` falls back to the best other voice on the machine. Video
+`S` below is `${CLAUDE_SKILL_DIR}/scripts`; `l2v tts ep01/ [args]` passes `tts.py` options through.
+The default voice is local and offline, so every episode of a course sounds the same:
+Supertonic 3 `F1` for Korean and other languages, Kokoro `af_heart` for English. If it can't
+run, `tts.py` falls back to edge-tts SunHi, then the best other voice on the machine, and says so. Video
 defaults: H.264 CRF 18, AAC 192k (`defaults.json`). Change them only when asked, at
 the scope the user means:
 
-- "다른 목소리 들어보고 싶어": run `--samples`, present `voice-samples/index.md`.
+- "다른 목소리 들어보고 싶어": run `l2v tts ep01/ --samples`, present `voice-samples/index.md`.
 - This episode only: `"voice": {...}` or `"encode": {"crf": 23}` in `script.json`, then
-  delete `audio/*.wav` and re-run `tts.py` and `timeline.py`.
+  `l2v tts ep01/ --force` and `l2v timeline ep01/`.
 - Every episode from now on: `python $S/settings.py set voice '{"engine": "say", "voice": "Yuna"}'`
   (or `set encode ...`), stored in `~/.config/lecture2video/config.json`;
   `settings.py show ep01/` prints what will be used, `settings.py reset` undoes it.
 
-Engines: `say` (macOS), `sapi` (Windows), `edge` (natural, needs `pip install edge-tts`
-and internet), `sherpa` (offline neural), `espeak`, or `--engine cmd` for any other
-TTS. Keep one voice for every episode of a course. If nothing can voice, make the
-film anyway and hand over `narration.md` for recording; dropping
+Engines: `supertonic` and `kokoro` (offline neural, the defaults), `say` (macOS), `sapi`
+(Windows), `edge` (natural, needs internet), `sherpa` (offline, lo-fi), `espeak`, or
+`--engine cmd` for any other TTS. Keep one voice for every episode of a course. If nothing
+can voice, make the film anyway and hand over `narration.md` for recording; dropping
 `audio/<scene>_<nn>.wav` files in later re-times everything.
+
+After editing a line, run `l2v voice ep01/` again: lines whose text changed are re-voiced
+(`audio/manifest.json` records what each file says), and `l2v render` refuses to export an
+episode whose voice or timing no longer matches `script.json`.
 
 ### 5. Build the scenes
 
@@ -152,49 +191,74 @@ Read `references/scene-api.md`. In short:
   why, a board equation). `parts.js` has cell columns, rise-in and the board wipe;
   `assets/starter/` and `references/example-vae-scenes/` have working ones to copy.
 - Time everything from `k.caps[i].t0`, never fixed seconds.
+- Where before how: at each chapter start the player shows the episode's chapter list along
+  the top for a few seconds, current one lit (`"agenda": false` in script.json turns it off).
+  In a hand-built scene about one part of a bigger diagram, show that part in the whole first.
+- Anything the slides don't contain carries the 보충 badge on screen (`<div class="extra">보충</div>`);
+  the check looks for it.
 - Math is typeset with KaTeX in the slides' own notation; the spoken caption says it
   in words.
 
 Build in order and check each scene's stills as you go.
 
-### 6. Check, export, finish
+### 6. Check, verify, export, finish
 
 ```bash
-python $S/render.py ep01/ --stills 12,40,75        # PNGs in stills/
-python $S/render.py ep01/ --sheet 24               # contact sheet of the whole episode
-python $S/render.py ep01/                          # ep01/film.mp4; several minutes, run it in the background
-python $S/finish.py ep01/                          # adds soft subtitles + chapters to film.mp4, writes chapters.txt
+l2v render ep01/ --stills 12,40,75   # PNGs in stills/ while building a scene
+l2v preview ep01/                    # one frame per narration line + on-screen text and mark scan
+l2v check ep01/                      # FAIL 0, WARN 0: slides, numbers, labels, and where every mark lands
 ```
 
-Look at the stills yourself: every mark sits on the words it means, nothing hides
-under the chapter chip (top left) or the source tag (top right), the slide is never
-cropped, each sentence's subject is on screen while it is spoken, and every formula
-matches the slide. Then pull one or two frames from the final `film.mp4` with ffmpeg
-to confirm the export.
+Look at every `verify/preview_*.jpg` yourself (`verify/preview_index.md` says which cell
+is which line): every mark sits on the words it means (the check only proves it lands on
+*a* line), nothing hides under the chapter chip, the chapter strip or the source tag, the
+slide is never cropped, each sentence's subject is on screen while it is spoken, and every
+formula matches the slide (`verify/VERIFY_auto.md` lists them). Fix, re-run until FAIL 0, WARN 0.
 
-Install as needed: `pip install pymupdf playwright edge-tts`,
-`python -m playwright install chromium`, ffmpeg from the system package manager.
+Then the independent check: spawn a fresh subagent with the Agent tool, with the prompt in
+`references/verification.md` ("Running the verifier"). It writes `VERIFY.md`. On
+FIX-AND-RERUN, fix, re-run preview and check, and send what changed to a new verifier;
+after 3 rounds without PASS mark the episode BLOCKED with its open items (for the final
+report) and continue with the next episode. Don't skip this step, even when the user said
+"just make it".
 
-### 7. Deliver
-
-Send `film.mp4` and mention `narration.srt`, `chapters.txt`, `index.html`. Say which
-voice was used, what was added as 보충, and anything left rough. The slides and any
-textbook figures in them belong to the instructor: mention that before the user
-posts an episode publicly. Then offer the next episode; it reuses the map, the voice
-and the look, so it goes faster.
-
-For the whole lecture as one video, keep the episodes (each with its recap and
-wrap-up, which double as section breaks) and join them:
+Only after PASS:
 
 ```bash
-python $S/join.py lecture.mp4 ep01/ ep02/ ep03/ --title "..."   # + lecture.srt, lecture-chapters.txt
+l2v render ep01/                     # ep01/film.mp4; several minutes, run it in the background
+l2v check ep01/                      # once more: the render records every 3rd frame's text
+l2v finish ep01/                     # adds soft subtitles + chapters to film.mp4, writes chapters.txt
 ```
 
-Episode folders render independently, so render several at once in the background.
+Pull one or two frames from the final `film.mp4` with ffmpeg to confirm the export.
+
+### 7. Next episode, then deliver the series
+
+When an episode has passed verification and its render is running in the background, go
+straight to the next episode in `lecture-map.md` (`l2v new ep02/ --starter`, `l2v slides`
+for its range, then steps 3-6). Each episode reuses the map, the voice, the look and the
+glossary, and its recap scene picks up from the previous episode's wrap-up. Episode folders
+render independently, so renders overlap with building the next episode. Between
+episodes, tell the user progress in one line ("2편 완료 · 4:12 · 검증 PASS, 3편 시작"), not
+a question.
+
+After the last episode, join them into the whole lecture (each episode's recap and wrap-up
+double as section breaks):
+
+```bash
+l2v join lecture.mp4 ep01/ ep02/ ep03/ --title "..."   # + lecture.srt, lecture-chapters.txt
+```
+
+Then deliver everything at once: send `lecture.mp4` and each episode's `film.mp4`, and give
+a table with one row per episode (slides, length, `VERIFY.md` verdict, what was added as
+보충). Mention `narration.srt`, `chapters.txt` and `index.html`, the voice used, any episode
+left BLOCKED with its open items, and anything left rough. The slides and any textbook
+figures in them belong to the instructor: say so before the user posts anything publicly.
 
 ## Reference files
 
 - `references/craft.md`: structure, pacing, slide-scene and narration rules (read before step 3)
+- `references/verification.md`: claims.json, the mechanical check, the verifier's five layers
 - `references/scene-api.md`: the slide scene, parts.js, board and quiz patterns
 - `references/scene-api-paper.md`: the engine's full API from the paper skill: pseudo-3D
   world, bars that re-sort, timeline lanes (for processes and algorithms)

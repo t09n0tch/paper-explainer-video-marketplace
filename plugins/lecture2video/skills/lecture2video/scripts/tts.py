@@ -2,6 +2,12 @@
 """Voice every narration line of film/script.json into film/audio/<scene>_<nn>.wav.
 
 Engines (pick with --engine, or let 'auto' find one):
+  supertonic  Supertonic 3 (pip install supertonic; OpenRAIL-M weights). Offline neural voices
+         for Korean and 30 other languages, voices F1-F5 / M1-M5. The default for every
+         language but English. ~400 MB model downloaded once from Hugging Face.
+  kokoro Kokoro-82M via kokoro-onnx (pip install kokoro-onnx soundfile; Apache-2.0 weights).
+         Offline neural English voices (af_heart, am_michael, bf_emma...); the default for
+         English. ~350 MB model downloaded once from GitHub.
   say    macOS built-in voices (Korean: Yuna). Offline, decent.
   sapi   Windows built-in voices via PowerShell (Korean: Heami, if installed). Offline.
   edge   the 'edge-tts' package (pip install edge-tts). Natural neural voices
@@ -14,21 +20,24 @@ Engines (pick with --engine, or let 'auto' find one):
   cmd    any other TTS you have (a paid API CLI, a local model...):
          --cmd 'mytts --in {text_file} --out {out}'   ({text} also works, shell-quoted)
 
+--rate is words per minute for say/espeak, a percentage for edge, a speed factor
+(1.0 = normal) for supertonic/kokoro/sherpa.
+The kokoro/supertonic code follows SunandBean/paper2video (MIT, Sunbin Kim).
 All output is normalised to 48 kHz mono 16-bit WAV with ffmpeg.
 Existing files are kept unless --force, so editing one line re-voices only that line
 (delete its wav, or use --only scene_id).
 
 usage: python tts.py film/ --samples [--text "..."]   one sentence in every available voice,
                                                    into film/voice-samples/, for the user to pick
-       python tts.py film/ [--engine auto|say|sapi|edge|sherpa|espeak|cmd] [--voice NAME]
+       python tts.py film/ [--engine auto|supertonic|kokoro|say|sapi|edge|sherpa|espeak|cmd] [--voice NAME]
                            [--rate N] [--cmd TEMPLATE] [--only ID[,ID]] [--force] [--list]
-Without --engine the voice comes from settings.py: the shipped default (edge, ko-KR-SunHiNeural),
+Without --engine the voice comes from settings.py: the shipped default (supertonic F1; English: kokoro af_heart),
 overridden by the user's ~/.config/lecture2video/config.json, overridden by script.json
 "voice": {"engine": "...", "voice": "...", "rate": ...}. If the default engine is missing or fails
-(no internet), tts.py falls back to the best other voice on this machine.
+tts.py falls back to edge, then the best other voice on this machine, and says so.
 After it finishes, run timeline.py again so the timing follows the real speech.
 """
-import argparse, json, os, platform, shlex, shutil, subprocess, sys, tempfile
+import argparse, json, os, platform, shlex, shutil, subprocess, sys, tempfile, urllib.request
 
 import settings
 
@@ -38,7 +47,15 @@ SHERPA_MODELS = {  # lang -> (release asset, folder, model file)
     "ko": ("vits-mimic3-ko_KO-kss_low", "ko_KO-kss_low.onnx"),
 }
 SHERPA_URL = "https://github.com/k2-fsa/sherpa-onnx/releases/download/tts-models/%s.tar.bz2"
-CACHE = os.path.join(os.path.expanduser("~"), ".cache", "lecture2video", "tts")
+CACHE = os.path.join(os.path.expanduser("~"), ".cache", "paper2video", "tts")   # shared with paper2video: voice models download once
+KOKORO_URL = "https://github.com/thewh1teagle/kokoro-onnx/releases/download/model-files-v1.0/"
+KOKORO_FILES = {"kokoro-v1.0.onnx": 325532387, "voices-v1.0.bin": 28214398}  # name: size in bytes
+KOKORO_LANG = {"a": "en-us", "b": "en-gb", "e": "es", "f": "fr-fr", "h": "hi", "i": "it", "p": "pt-br"}  # voice prefix
+KOKORO_VOICES = {"en": ["af_heart", "af_bella", "am_michael", "am_fenrir", "bf_emma", "bm_george"]}
+SUPERTONIC_LANGS = set("en ko ja ar bg cs da de el es et fi fr hi hr hu id it lt lv nl pl pt ro ru sk sl sv tr uk vi".split())
+SUPERTONIC_VOICES = ["F1", "F2", "F3", "F4", "F5", "M1", "M2", "M3", "M4", "M5"]
+PIP = {"supertonic": "pip install supertonic", "kokoro": "pip install kokoro-onnx soundfile",
+       "edge": "pip install edge-tts", "sherpa": "pip install sherpa-onnx==1.12.40"}
 
 DEFAULT_VOICE = {
     "say": {"ko": "Yuna", "en": "Samantha", "ja": "Kyoko"},
@@ -46,6 +63,8 @@ DEFAULT_VOICE = {
     "edge": {"ko": "ko-KR-SunHiNeural", "en": "en-US-AriaNeural", "ja": "ja-JP-NanamiNeural"},
     "espeak": {"ko": "ko", "en": "en-us", "ja": "ja"},
     "sherpa": {"ko": "kss"},
+    "kokoro": {"en": "af_heart"},
+    "supertonic": dict((l, "F1") for l in SUPERTONIC_LANGS),
 }
 EDGE_VOICES = {"ko": ["ko-KR-SunHiNeural", "ko-KR-InJoonNeural"], "en": ["en-US-AriaNeural", "en-US-GuyNeural"], "ja": ["ja-JP-NanamiNeural", "ja-JP-KeitaNeural"]}
 
@@ -103,7 +122,7 @@ def sherpa_ready(lang, download=False):
     if not download:
         return d  # present as available; fetched on first use
     os.makedirs(CACHE, exist_ok=True)
-    import tarfile, urllib.request
+    import tarfile
     tgz = os.path.join(CACHE, name + ".tar.bz2")
     print("downloading offline voice model (one time):", SHERPA_URL % name)
     urllib.request.urlretrieve(SHERPA_URL % name, tgz)
@@ -111,6 +130,106 @@ def sherpa_ready(lang, download=False):
         tf.extractall(CACHE)
     os.remove(tgz)
     return d
+
+
+def kokoro_ready(lang):
+    try:
+        import kokoro_onnx  # noqa: F401
+    except Exception:
+        return False
+    return lang in KOKORO_VOICES
+
+
+def supertonic_ready(lang):
+    try:
+        import supertonic  # noqa: F401
+    except Exception:
+        return False
+    return lang in SUPERTONIC_LANGS
+
+
+def missing(engine, lang):
+    """Why this engine can't voice this language here (with the pip command), or None."""
+    mod = {"kokoro": "kokoro_onnx", "supertonic": "supertonic", "sherpa": "sherpa_onnx"}.get(engine)
+    if engine == "edge" and not have_edge() or mod and not __import__("importlib.util").util.find_spec(mod):
+        return "voice engine '%s' is not installed (%s)" % (engine, PIP[engine])
+    if not ready(engine, lang):
+        return "voice engine '%s' has no '%s' voice" % (engine, lang)
+    return None
+
+
+def ready(engine, lang):
+    return {"edge": have_edge, "kokoro": lambda: kokoro_ready(lang), "supertonic": lambda: supertonic_ready(lang),
+            "sherpa": lambda: bool(sherpa_ready(lang))}.get(engine, lambda: True)()
+
+
+_LOCAL = {}
+
+
+def write_wav(out_wav, samples, sr):
+    import wave, numpy as np
+    pcm = (np.clip(np.asarray(samples, dtype=np.float32).reshape(-1), -1, 1) * 32767).astype("<i2")
+    with wave.open(out_wav, "wb") as w:
+        w.setnchannels(1); w.setsampwidth(2); w.setframerate(int(sr)); w.writeframes(pcm.tobytes())
+
+
+def kokoro_say(text, out_wav, voice, speed):
+    if "kokoro" not in _LOCAL:
+        try:  # phonemizer copies libespeak-ng to a temp dir before dlopen, which hardened macOS can refuse
+            import phonemizer.backend.espeak.api as api
+            cp = api.shutil.copy
+            def link(src, dst, follow_symlinks=True):
+                try:
+                    os.symlink(os.path.abspath(src), dst); return dst
+                except OSError:
+                    return cp(src, dst, follow_symlinks=follow_symlinks)
+            api.shutil.copy = link
+        except (ImportError, AttributeError):
+            pass
+        from kokoro_onnx import Kokoro
+        d = os.path.join(CACHE, "kokoro"); os.makedirs(d, exist_ok=True)
+        for name, size in KOKORO_FILES.items():
+            p = os.path.join(d, name)
+            if os.path.exists(p) and os.path.getsize(p) == size:
+                continue
+            print("downloading offline voice model (one time, %d MB): %s" % (size // 10**6, KOKORO_URL + name))
+            urllib.request.urlretrieve(KOKORO_URL + name, p + ".part")
+            if os.path.getsize(p + ".part") != size:
+                os.remove(p + ".part"); raise RuntimeError(name + ": incomplete download")
+            os.replace(p + ".part", p)
+        import espeakng_loader
+        from kokoro_onnx import EspeakConfig
+        data = espeakng_loader.get_data_path()
+        if len(data) > 150:  # espeak-ng silently ignores data paths longer than its fixed buffer
+            short = os.path.join(CACHE, "espeak-ng-data")
+            if not os.path.exists(os.path.join(short, "phontab")):
+                shutil.copytree(data, short, dirs_exist_ok=True)
+            data = short
+        _LOCAL["kokoro"] = Kokoro(os.path.join(d, "kokoro-v1.0.onnx"), os.path.join(d, "voices-v1.0.bin"),
+                                  espeak_config=EspeakConfig(data_path=data))
+    s, sr = _LOCAL["kokoro"].create(text, voice=voice, speed=speed, lang=KOKORO_LANG.get(voice[0], "en-us"))
+    write_wav(out_wav, s, sr)
+
+
+def supertonic_say(lang, text, out_wav, voice, speed):
+    if "supertonic" not in _LOCAL:
+        from supertonic import TTS
+        d = os.path.join(CACHE, "supertonic3")
+        if not os.path.isdir(d):
+            print("downloading offline voice model (one time, ~400 MB) from huggingface.co/Supertone/supertonic-3")
+        _LOCAL["supertonic"] = TTS(model_dir=d, auto_download=True)
+    t = _LOCAL["supertonic"]
+    w, _ = t.synthesize(text, voice_style=t.get_voice_style(voice_name=voice), lang=lang, speed=speed)
+    write_wav(out_wav, w, t.sample_rate)
+
+
+def local(fn, out, *args):
+    """Run an in-process engine; report failure like a subprocess so the fallback logic applies."""
+    try:
+        fn(*args)
+        return out, subprocess.CompletedProcess([], 0, "", "")
+    except Exception as e:
+        return out, subprocess.CompletedProcess([], 1, "", "%s: %s" % (e.__class__.__name__, e))
 
 
 _SHERPA = {}
@@ -137,6 +256,10 @@ def sherpa_say(lang, text, out_wav, speed=1.0):
 def all_voices(lang):
     """Every (engine, voice, rate, label) this machine can probably produce, best first."""
     out = []
+    if kokoro_ready(lang):
+        out += [("kokoro", v, None, "offline Kokoro " + v) for v in KOKORO_VOICES[lang]]
+    if supertonic_ready(lang):
+        out += [("supertonic", v, None, "offline Supertonic " + v) for v in SUPERTONIC_VOICES]
     if platform.system() == "Darwin" and shutil.which("say"):
         tag = {"ko": "ko_KR", "en": "en_US", "ja": "ja_JP"}.get(lang, lang)
         for line in run(["say", "-v", "?"]).stdout.splitlines():
@@ -161,14 +284,18 @@ def all_voices(lang):
 
 
 def pick(lang, skip=()):
+    """Best engine here: local neural (kokoro for English, supertonic), then edge, system voices, sherpa, espeak."""
+    for e in ("kokoro", "supertonic"):
+        if e not in skip and ready(e, lang):
+            return e, DEFAULT_VOICE[e][lang]
+    if "edge" not in skip and have_edge():
+        return "edge", DEFAULT_VOICE["edge"].get(lang)
     v = "say" not in skip and have_say_voice(lang)
     if v:
         return "say", v
     v = "sapi" not in skip and have_sapi_voice(lang)
     if v:
         return "sapi", v
-    if "edge" not in skip and have_edge():
-        return "edge", DEFAULT_VOICE["edge"].get(lang)
     if "sherpa" not in skip and sherpa_ready(lang):
         return "sherpa", "kss"
     if shutil.which("espeak-ng") or shutil.which("espeak"):
@@ -195,6 +322,10 @@ def synth(engine, voice, text, raw, rate, cmd_tpl):
         if rate:
             c += ["--rate", rate if str(rate).endswith("%") else "%+d%%" % int(rate)]
         r = run(c); return raw + ".mp3", r
+    if engine == "kokoro":
+        return local(kokoro_say, raw + ".wav", text, raw + ".wav", voice or "af_heart", float(rate or 1.0))
+    if engine == "supertonic":
+        return local(supertonic_say, raw + ".wav", LANG[0], text, raw + ".wav", voice or "F1", float(rate or 1.05))
     if engine == "sherpa":
         sherpa_say(LANG[0], text, raw + ".wav", rate or 1.0)
         return raw + ".wav", subprocess.CompletedProcess([], 0, "", "")
@@ -226,22 +357,25 @@ def main():
         return samples(a, spec, lang)
     cfg = settings.load(spec)["voice"]
     fallback = a.engine == "auto" and cfg.get("fallback", "auto") == "auto"
-    if a.engine == "auto" and cfg.get("engine", "auto") != "auto":
-        a.engine = cfg["engine"]
+    if a.engine == "auto" and settings.per_lang(cfg.get("engine"), lang) not in (None, "auto"):
+        a.engine = settings.per_lang(cfg["engine"], lang)
         a.voice = a.voice or settings.voice_name(cfg.get("voice"), lang)
         a.rate = a.rate or cfg.get("rate")
     engine, voice = (a.engine, a.voice) if a.engine != "auto" else pick(lang)
-    if fallback and engine == "edge" and not have_edge():
-        print("default voice engine 'edge' is not installed (pip install edge-tts); falling back")
-        engine, voice = pick(lang, skip=("edge",)); a.rate = None
-    if a.engine != "auto" and not voice:
+    why = engine and missing(engine, lang)
+    if why and not fallback:
+        sys.exit(why)
+    if why:
+        print(why + "; falling back")
+        engine, voice = pick(lang, skip=(engine,)); a.rate = None
+    elif a.engine != "auto" and not voice:
         voice = DEFAULT_VOICE.get(engine, {}).get(lang)
-    if a.voice:
+    elif a.voice:
         voice = a.voice
     if a.list or not engine:
         print("engine:", engine, "voice:", voice)
         if not engine:
-            sys.exit("No TTS engine found. Options: pip install edge-tts (needs internet), install a %s system voice, or --engine cmd." % lang)
+            sys.exit("No TTS engine found. Options: %s (offline), pip install edge-tts (online), a %s system voice, or --engine cmd." % (PIP["kokoro" if lang == "en" else "supertonic"], lang))
         return
     if engine == "cmd" and not a.cmd:
         sys.exit("--engine cmd needs --cmd TEMPLATE")
@@ -249,15 +383,19 @@ def main():
     os.makedirs(os.path.join(a.root, "audio"), exist_ok=True)
     tmp = tempfile.mkdtemp()
     made = 0
+    # audio/manifest.json: the text each wav was voiced from; a changed line is re-voiced, and render.py refuses a mismatch
+    man_path = os.path.join(a.root, "audio", "manifest.json")
+    man = json.load(open(man_path, encoding="utf-8")) if os.path.exists(man_path) else {}
     print("engine: %s  voice: %s" % (engine, voice))
     for s in spec["scenes"]:
         if only and s["id"] not in only:
             continue
         for i, text in enumerate(s["captions"]):
             dst = os.path.join(a.root, "audio", "%s_%02d.wav" % (s["id"], i))
-            if os.path.exists(dst) and not a.force:
-                continue
             say_text = s.get("say", {}).get(str(i), text) if isinstance(s.get("say"), dict) else text
+            if os.path.exists(dst) and not a.force and man.get(os.path.basename(dst), say_text) == say_text:
+                man.setdefault(os.path.basename(dst), say_text)
+                continue
             raw = os.path.join(tmp, "%s_%02d" % (s["id"], i))
             src, r = synth(engine, voice, say_text, raw, a.rate, a.cmd)
             bad = lambda: r.returncode or not os.path.exists(src) or not os.path.getsize(src)
@@ -276,7 +414,11 @@ def main():
             if c.returncode:
                 sys.exit("ffmpeg failed: " + c.stderr)
             made += 1
+            man[os.path.basename(dst)] = say_text
+            man["_voice"] = "%s %s" % (engine, voice)   # recorded for the credits and the verifier
+            json.dump(man, open(man_path, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
             print("  voiced %s_%02d" % (s["id"], i))
+    json.dump(man, open(man_path, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
     print("done: %d new lines. Now run: python timeline.py %s" % (made, a.root))
 
 
@@ -286,7 +428,7 @@ def samples(a, spec, lang):
     tmp = tempfile.mkdtemp(); rows = []
     voices = all_voices(lang)
     if not voices:
-        sys.exit("No voice available. Options: pip install sherpa-onnx==1.12.40 (offline), pip install edge-tts (online), "
+        sys.exit("No voice available. Options: pip install supertonic kokoro-onnx soundfile (offline), pip install edge-tts (online), "
                  "or a system voice for this language.")
     for i, (eng, v, rate, label) in enumerate(voices, 1):
         dst = os.path.join(d, "%02d-%s-%s%s.wav" % (i, eng, v.replace(" ", "_"), "" if rate in (None, 1.0) else "-%s" % rate))

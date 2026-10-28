@@ -1,0 +1,30 @@
+{
+  "claims": [
+    {
+      "id": "c01",
+      "kind": "quote",
+      "used_in": [
+        "room.1"
+      ],
+      "text": "high-value objects 5 points, low-value 1 point",
+      "quote": "high-value objects are worth 5 points and low-value objects 1 point"
+    },
+    {
+      "id": "c02",
+      "kind": "example",
+      "used_in": [
+        "chart.0"
+      ],
+      "text": "0.77 vs 0.10: made-up bar values for the starter chart",
+      "values": [
+        "0.77",
+        "0.10"
+      ],
+      "on_screen_label": "예시 값"
+    }
+  ],
+  "allow_numbers": {
+    "4": "equation number shown as the source, 논문 식 (4)",
+    "56": "object id on the room label (an id, not a measurement)"
+  }
+}

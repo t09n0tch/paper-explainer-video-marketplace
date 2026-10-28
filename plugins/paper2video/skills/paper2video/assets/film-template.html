@@ -25,7 +25,10 @@
 <div id="ui"><button id="play">&#9654;</button><input id="scrub" type="range" min="0" max="10000" value="0"><span id="tc">0:00</span></div>
 <audio id="aud" preload="auto"></audio>
 <script src="katex/katex.min.js"></script>
+<script src="three/three.min.js"></script>
 <script src="engine.js"></script>
+<script src="t3.js"></script>
+<script src="templates.js"></script>
 <script src="timeline.js"></script>
 <script>
 (function () {
@@ -36,6 +39,35 @@
   const capsEl = document.getElementById('caps'), chap = document.getElementById('chap');
   const REG = {};
   window.SCENE = (id, def) => { REG[id] = def; };
+
+  // Every string the viewer can see, for check_claims.py: the current scene's visible DOM text
+  // (KaTeX elements by their LaTeX source) and anything a canvas draws with fillText/strokeText.
+  // Numbers computed in JS (bar values, counters) only exist here, so this is what the checker trusts.
+  // A string counts once it holds for HOLD samples in a row, so a counter tweening 0.00 -> 0.77
+  // records 0.77, not every value it passed through.
+  const SEEN = new Map(), HOLD = 2; let CUR = '', CURT = 0, FRAME = [], STAB = new Map(), IDS = new WeakMap(), NID = 0;
+  const note = (text, tex) => {
+    text = String(text).replace(/\s+/g, ' ').trim();
+    const key = CUR + '\u0000' + text;
+    if (text && !SEEN.has(key)) SEEN.set(key, { text, scene: CUR, t: Math.round(CURT * 100) / 100, tex: !!tex });
+  };
+  for (const fn of ['fillText', 'strokeText']) {
+    const orig = CanvasRenderingContext2D.prototype[fn];
+    CanvasRenderingContext2D.prototype[fn] = function (s, x, y, ...a) {
+      if (this.globalAlpha > 0.05) FRAME.push(['cv' + Math.round(x) + ',' + Math.round(y), s, false]);
+      return orig.call(this, s, x, y, ...a);
+    };
+  }
+  const shown = (el, root) => {
+    let a = 1;
+    for (let e = el; e; e = e.parentElement) {
+      const cs = getComputedStyle(e);
+      if (cs.display === 'none' || cs.visibility === 'hidden') return false;
+      a *= +cs.opacity; if (a < 0.05) return false;
+      if (e === root) break;
+    }
+    return true;
+  };
 
   // caption layer: one element per narration line, as the viewer reads it
   const caps = [];
@@ -81,6 +113,7 @@
     if (i < 0) i = scenes.length - 1;
     if (i !== cur) { scenes.forEach((x, j) => { x.box.style.visibility = j === i ? 'visible' : 'hidden'; }); cur = i; }
     const x = scenes[i], lt = T - x.s.start;
+    CUR = x.s.id; CURT = lt; FRAME = [];
     try { x.def.render.call(x.def, lt, x.k); } catch (e) { console.error('render ' + x.s.id, e); }
     for (const c of caps) { const a = Math.min(E.c01((T - c.t0) / 0.25), E.c01((c.t1 - T) / 0.25)); c.el.style.opacity = a; c.el.style.visibility = a > 0 ? 'visible' : 'hidden'; }
     const prev = i > 0 ? scenes[i - 1].s.chapter : null;
@@ -88,7 +121,40 @@
     chap.style.visibility = x.s.chapter ? 'visible' : 'hidden';
     chap.style.opacity = x.s.chapter === prev ? 1 : E.eo(E.seg(lt, 0, 0.4));
   }
-  window.FILM = { ready, renderAt, duration: TL.duration, fps: TL.fps || 30 };
+  // record what the frame just rendered shows (call after renderAt)
+  function collect() {
+    const x = scenes[cur]; if (!x) return;
+    const id = (el) => { if (!IDS.has(el)) IDS.set(el, 'e' + NID++); return IDS.get(el); };
+    const vis = FRAME.slice(), done = new Set();
+    x.box.querySelectorAll('[data-tex]').forEach((el) => { if (shown(el, x.box)) vis.push([id(el), el.dataset.tex, true]); });
+    const w = document.createTreeWalker(x.box, NodeFilter.SHOW_TEXT);
+    for (let n = w.nextNode(), i = 0; n; n = w.nextNode(), i++) {
+      if (!n.nodeValue.trim() || n.parentElement.closest('[data-tex]')) continue;
+      const line = n.parentElement.parentElement;
+      if (line && line._words) {  // fadeWords pieces: record the whole line once any word shows
+        if (!done.has(line) && line._words.some((s) => shown(s, x.box))) { done.add(line); vis.push([id(line), line.textContent, false]); }
+        continue;
+      }
+      // keyed by the parent element: setting textContent replaces the text node every frame
+      if (shown(n.parentElement, x.box)) vis.push([id(n.parentElement) + ':' + i, n.nodeValue, false]);
+    }
+    const next = new Map();
+    for (const [k, text, tex] of vis) {
+      const key = CUR + '|' + k, p = STAB.get(key), n = p && p.text === text ? p.n + 1 : 1;
+      next.set(key, { text, n });
+      if (n === HOLD) note(text, tex);
+    }
+    STAB = next;
+  }
+  const onscreen = () => [...SEEN.values()];
+  // step through the whole film every `step` frames and return everything shown
+  function scan(step) {
+    const fps = TL.fps || 30, n = Math.floor(TL.duration * fps);
+    STAB = new Map();
+    for (let f = 0; f < n; f += step || 3) { renderAt(f / fps); collect(); }
+    return onscreen();
+  }
+  window.FILM = { ready, renderAt, collect, onscreen, scan, duration: TL.duration, fps: TL.fps || 30 };
 
   if (RENDER) return;
   // preview: fit, play, scrub, audio sync

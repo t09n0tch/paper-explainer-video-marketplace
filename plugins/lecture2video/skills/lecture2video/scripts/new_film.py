@@ -5,7 +5,7 @@
 
 Copies index.html (the player), engine.js, film.css, slide.js (the data-driven slide scene), parts.js
 (builders for hand-made scenes) and katex/, and makes scenes/, audio/ and slides/.
---starter also copies a small example (script.json, scenes/) to start from.
+--starter also copies a small example (script.json, claims.json, scenes/) to start from.
 Existing files are never overwritten, so it is safe to run again.
 """
 import os, shutil, sys

@@ -78,6 +78,11 @@ def main():
     open(os.path.join(root, "timeline.js"), "w", encoding="utf-8").write("window.TIMELINE = " + json.dumps(tl, ensure_ascii=False) + ";\n")
 
     srt, md, n = [], ["# " + (tl["title"] or "Narration"), "", "Total %s" % ts(t, ".")[3:-1], ""], 1
+    man = os.path.join(root, "audio", "manifest.json")
+    if os.path.exists(man):
+        v = json.load(open(man, encoding="utf-8")).get("_voice")
+        if v:
+            md[-1:-1] = ["Voice: %s (TTS)" % v]
     for s in out:
         md += ["## %s  (%s - %s)" % (s["chapter"] or s["id"], ts(s["start"], ".")[3:-1], ts(s["start"] + s["dur"], ".")[3:-1]), ""]
         for c in s["caps"]:

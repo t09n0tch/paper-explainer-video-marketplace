@@ -1,0 +1,6 @@
+=== page 1 ===
+A tiny stand-in paper for the starter film and the smoke test (not a real paper).
+Each object carries a value: high-value objects are worth 5 points and low-value objects 1 point.
+Table 2: Plan staleness rank correlation.
+Method        Standard   Latency-aware
+RRARA         0.77       0.10

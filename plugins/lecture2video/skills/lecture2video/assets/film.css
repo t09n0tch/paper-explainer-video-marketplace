@@ -53,3 +53,8 @@
 .extra { position: absolute; padding: 6px 16px; border-radius: 999px; font-size: 22px; font-weight: 700; color: var(--ground); background: var(--main) }
 .cell { position: absolute; width: 46px; height: 40px; border-radius: 6px; box-sizing: border-box; border: 2px solid color-mix(in srgb, var(--second) 30%, transparent) }
 .slsrc { padding: 6px 14px; border-radius: 999px; background: color-mix(in srgb, var(--ground) 82%, transparent) }
+
+/* chapter list shown at each chapter start (where before how), top centre, clear of the chip and the slide */
+.agenda { position: absolute; left: 50%; top: 44px; transform: translateX(-50%); display: flex; gap: 10px; z-index: 49; max-width: 1180px; flex-wrap: nowrap; overflow: hidden }
+.agenda span { padding: 6px 14px; border-radius: 999px; font-size: 20px; font-weight: 700; white-space: nowrap; background: color-mix(in srgb, var(--ground) 80%, var(--second)); opacity: .45 }
+.agenda span.on { background: var(--accent); color: var(--ground); opacity: 1 }

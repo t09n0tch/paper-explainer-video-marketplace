@@ -73,11 +73,16 @@ def main():
         dur = max(x - gap + tail + s.get("hold", 0), s.get("min_dur", 0))
         out.append({"id": s["id"], "chapter": s.get("chapter", ""), "start": round(t, 3), "dur": round(dur, 3), "caps": caps})
         t += dur
-    tl = {"title": spec.get("title", ""), "fps": spec.get("fps", 30), "duration": round(t, 3), "shared": spec.get("shared", []), "burn_captions": spec.get("burn_captions", False), "scenes": out}
+    tl = {"title": spec.get("title", ""), "fps": spec.get("fps", 30), "duration": round(t, 3), "shared": spec.get("shared", []), "burn_captions": spec.get("burn_captions", False), "agenda": spec.get("agenda", True), "scenes": out}
     json.dump(tl, open(os.path.join(root, "timeline.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
     open(os.path.join(root, "timeline.js"), "w", encoding="utf-8").write("window.TIMELINE = " + json.dumps(tl, ensure_ascii=False) + ";\n")
 
     srt, md, n = [], ["# " + (tl["title"] or "Narration"), "", "Total %s" % ts(t, ".")[3:-1], ""], 1
+    man = os.path.join(root, "audio", "manifest.json")
+    if os.path.exists(man):
+        v = json.load(open(man, encoding="utf-8")).get("_voice")
+        if v:
+            md[-1:-1] = ["Voice: %s (TTS)" % v]
     for s in out:
         md += ["## %s  (%s - %s)" % (s["chapter"] or s["id"], ts(s["start"], ".")[3:-1], ts(s["start"] + s["dur"], ".")[3:-1]), ""]
         for c in s["caps"]:

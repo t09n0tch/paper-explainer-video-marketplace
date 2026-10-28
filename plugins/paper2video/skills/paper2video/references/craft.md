@@ -47,18 +47,27 @@ in one chapter keep the same chip text, and it doesn't re-animate.
 ## 4. Visual language
 
 - **One world.** Render the paper's setting (a room, a street, a robot arm's
-  table, a map) with `k.W3` once and come back to it in several chapters with
-  different camera angles. Continuity is what makes it feel like a film rather
+  table, a map) in real 3D with `T3` once and come back to it in several chapters
+  with different camera angles (`k.W3`, the flat tilted view, suits top-down maps). Continuity is what makes it feel like a film rather
   than slides.
 - **Colour has meaning, held all film:** `--main` = the problem/hazard/loss,
   `--accent` = the method/agent/our result, `--second` = ink and neutral
   objects. Baselines are greyed second.
+- **Use the templates** (`TPL.bars`, `flow`, `formula`, `table`, ... in
+  `references/scene-api.md`) for results, pipelines and equations; write custom code
+  for the world and for the paper's signature idea, where the film earns its keep.
 - **Diagrams build.** A formula appears token by token, each with its meaning
   under it; then the tokens swap to numbers for the worked example. Timelines
   sweep with a playhead. Bars grow, then re-sort.
 - **Data panels** (`.card`) are small, sit right or top, and end with a source
   line: `Table 2`, `논문 그림 3`, `식 (4)`.
-- **Labels ride on objects** in the world (`.lab`, positioned with `W3.at`).
+- **Show where before how.** Every mechanism scene opens with a location cue
+  before the mechanism itself: which part of the system, where in the pipeline,
+  where in the world. Highlight that part of the overview diagram (or fly the camera
+  to that spot in the world) for the first sentence, then zoom into how it works. A
+  viewer who doesn't know where they are can't follow what happens there.
+- **Labels ride on objects** in the world (`.lab`, positioned with `v.at` in a T3
+  world or `W3.at` in a flat one).
 - **Everything breathes:** a slow camera drift or grid drift on every hold. A
   frozen frame reads as a bug. Nothing flashes more than 3 times a second.
 
@@ -91,9 +100,12 @@ in one chapter keep the same chip text, and it doesn't re-animate.
 
 ## 8. Accuracy
 
-- Every number on screen is in `facts.md` with its source.
-- Illustrative values (anything the paper doesn't give) are labelled 예시 on
-  screen.
+- Every number on screen is in `claims.json` with its source (a verbatim quote or a
+  table row), and `check_claims.py` proves it (`references/verification.md`).
+- Illustrative values (anything the paper doesn't give) are `example` claims and are
+  labelled 예시 on screen; your own arithmetic is `derived` and labelled too.
+- Keep the paper's conditions: "best" keeps its qualifiers (비교한 방법 중, 미세조정 후,
+  which benchmark, which hardware).
 - The caveats chapter is not optional: fair-comparison issues (e.g. the method
   got fine-tuning the baselines didn't), how the metric is defined, test-set
   size, missing variance.

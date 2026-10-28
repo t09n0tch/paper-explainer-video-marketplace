@@ -1,0 +1,829 @@
+{
+ "paper": "arXiv 2506.07223v2 (arXiv non-exclusive license: figures redrawn, not reused)",
+ "claims": [
+  {
+   "id": "c01",
+   "kind": "quote",
+   "used_in": [
+    "intro.0"
+   ],
+   "text": "시드니 대학교",
+   "quote": "The University of Sydney"
+  },
+  {
+   "id": "c02",
+   "kind": "quote",
+   "used_in": [
+    "intro.1",
+    "curve.0",
+    "curve.1",
+    "outro.0"
+   ],
+   "text": "강한 추론도 긴 응답 지연에 상쇄된다",
+   "quote": "Results show that stronger reasoning can be offset by longer response delays."
+  },
+  {
+   "id": "c03",
+   "kind": "quote",
+   "used_in": [
+    "setting.0"
+   ],
+   "text": "HAZARD: 불·물·바람이 번지는 동적 환경",
+   "quote": "HAZARD evaluates agents in dynamic fire, flood, and wind scenarios"
+  },
+  {
+   "id": "c04",
+   "kind": "quote",
+   "used_in": [
+    "setting.1",
+    "reflect.1",
+    "reflect.2"
+   ],
+   "text": "비싼 물건 5점, 싼 물건 1점",
+   "quote": "Objects are assigned either a high initial value of v = 5 or a low initial value of v = 1"
+  },
+  {
+   "id": "c05",
+   "kind": "quote",
+   "used_in": [
+    "setting.1",
+    "reflect.3",
+    "compare.0",
+    "compare.2",
+    "preplan.1"
+   ],
+   "text": "장면의 물체: 62·56은 가치 5, 66·57·64는 가치 1, 합계 13",
+   "quote": "The total object value in the scene is 13, where Objects 62 and 56 are high-value (5 each), and Objects 66, 57, and 64 are low-value (1 each)"
+  },
+  {
+   "id": "c06",
+   "kind": "quote",
+   "used_in": [
+    "setting.2"
+   ],
+   "text": "손상되면 가치가 줄고(식 10: 1/2 v), 타 버리면 0",
+   "quote": "value is reduced if it is damaged and becomes zero if it is destroyed"
+  },
+  {
+   "id": "c07",
+   "kind": "quote",
+   "used_in": [
+    "frozen.1"
+   ],
+   "text": "기존 시뮬레이터는 추론 중 세계를 멈춘다",
+   "quote": "Many simulators effectively freeze the environment during model inference"
+  },
+  {
+   "id": "c08",
+   "kind": "quote",
+   "used_in": [
+    "frozen.2",
+    "tcm.2"
+   ],
+   "text": "추론하는 동안 에이전트는 서 있고 환경은 계속 변한다",
+   "quote": "the agent remains stationary while the environment evolves autonomously"
+  },
+  {
+   "id": "c09",
+   "kind": "quote",
+   "used_in": [
+    "frozen.3"
+   ],
+   "text": "좋아 보이던 계획도 실행 전에 낡을 수 있다",
+   "quote": "a seemingly better plan may become stale before it can be acted upon"
+  },
+  {
+   "id": "c10",
+   "kind": "quote",
+   "used_in": [
+    "tcm.0"
+   ],
+   "text": "TCM: 추론 시간을 시뮬레이션 시간으로 환산",
+   "quote": "FPS-based Time Conversion Mechanism (TCM) that maps inference time to elapsed simulation time"
+  },
+  {
+   "id": "c11",
+   "kind": "quote",
+   "used_in": [
+    "tcm.1",
+    "budget.0"
+   ],
+   "text": "시뮬레이터는 30 FPS",
+   "quote": "with the simulator operating at 30 FPS"
+  },
+  {
+   "id": "c12",
+   "kind": "example",
+   "used_in": [
+    "tcm.1"
+   ],
+   "text": "3초 × 30 FPS = 90프레임 (3초는 설명용 예시)",
+   "values": [
+    "3",
+    "90"
+   ],
+   "on_screen_label": "예시"
+  },
+  {
+   "id": "c13",
+   "kind": "quote",
+   "used_in": [
+    "budget.0"
+   ],
+   "text": "화재·홍수 에피소드는 1,500프레임",
+   "quote": "Episodes are capped at 1,500 frames for fire and flood"
+  },
+  {
+   "id": "c14",
+   "kind": "derived",
+   "used_in": [
+    "budget.0"
+   ],
+   "text": "1,500프레임 / 30 FPS = 50초",
+   "from": [
+    "c11",
+    "c13"
+   ],
+   "derivation": "1500 / 30 = 50 s",
+   "on_screen_label": "계산값"
+  },
+  {
+   "id": "c15",
+   "kind": "table",
+   "used_in": [
+    "budget.1",
+    "results.0"
+   ],
+   "text": "GPT-3.5: RL 2.54 s, 가치 비율 0.25",
+   "table": "Table 2",
+   "row": "GPT-3.5",
+   "values": [
+    "2.54",
+    "0.25"
+   ]
+  },
+  {
+   "id": "c16",
+   "kind": "derived",
+   "used_in": [
+    "budget.1"
+   ],
+   "text": "2.54초 ≈ 77프레임",
+   "from": [
+    "c15",
+    "c11"
+   ],
+   "derivation": "ceil(2.54 × 30) = ceil(76.2) = 77 (식 1)",
+   "on_screen_label": "계산값"
+  },
+  {
+   "id": "c17",
+   "kind": "table",
+   "used_in": [
+    "budget.2"
+   ],
+   "text": "Claude-3.7-sonnet: RL 13.05 s (13초 넘음), 가치 비율 0.07",
+   "table": "Table 2",
+   "row": "Claude-3.7-sonnet",
+   "values": [
+    "13.05",
+    "0.07"
+   ]
+  },
+  {
+   "id": "c18",
+   "kind": "derived",
+   "used_in": [
+    "budget.2"
+   ],
+   "text": "13.05초 ≈ 392프레임 = 1,500프레임의 약 26% ≈ 4분의 1",
+   "from": [
+    "c17",
+    "c11",
+    "c13"
+   ],
+   "derivation": "ceil(13.05 × 30) = 392; 392 / 1500 = 0.261",
+   "on_screen_label": "계산값"
+  },
+  {
+   "id": "t1_00",
+   "kind": "table",
+   "used_in": [
+    "flip.0"
+   ],
+   "text": "화재 MCTS: 기존 0.75 → TCM 0.25",
+   "table": "Table 1",
+   "row": "MCTS",
+   "values": [
+    "0.75",
+    "0.25"
+   ]
+  },
+  {
+   "id": "t1_01",
+   "kind": "table",
+   "used_in": [
+    "flip.0"
+   ],
+   "text": "화재 Rule: 기존 0.33 → TCM 0.35",
+   "table": "Table 1",
+   "row": "Rule",
+   "values": [
+    "0.33",
+    "0.35"
+   ]
+  },
+  {
+   "id": "t1_02",
+   "kind": "table",
+   "used_in": [
+    "flip.0"
+   ],
+   "text": "화재 Greedy: 기존 0.08 → TCM 0.11",
+   "table": "Table 1",
+   "row": "Greedy",
+   "values": [
+    "0.08",
+    "0.11"
+   ]
+  },
+  {
+   "id": "t1_03",
+   "kind": "table",
+   "used_in": [
+    "flip.0",
+    "flip.3"
+   ],
+   "text": "화재 GPT-3.5: 기존 0.65 → TCM 0.44",
+   "table": "Table 1",
+   "row": "GPT-3.5",
+   "values": [
+    "0.65",
+    "0.44"
+   ]
+  },
+  {
+   "id": "t1_04",
+   "kind": "table",
+   "used_in": [
+    "flip.0"
+   ],
+   "text": "화재 GPT-4: 기존 0.71 → TCM 0.22",
+   "table": "Table 1",
+   "row": "GPT-4",
+   "values": [
+    "0.71",
+    "0.22"
+   ]
+  },
+  {
+   "id": "t1_05",
+   "kind": "table",
+   "used_in": [
+    "flip.0"
+   ],
+   "text": "화재 GPT-5: 기존 0.73 → TCM 0.35",
+   "table": "Table 1",
+   "row": "GPT-5",
+   "values": [
+    "0.73",
+    "0.35"
+   ]
+  },
+  {
+   "id": "t1_06",
+   "kind": "table",
+   "used_in": [
+    "flip.0"
+   ],
+   "text": "화재 Llama-2-7b-hf: 기존 0.60 → TCM 0.05",
+   "table": "Table 1",
+   "row": "Llama-2-7b-hf",
+   "values": [
+    "0.60",
+    "0.05"
+   ]
+  },
+  {
+   "id": "t1_07",
+   "kind": "table",
+   "used_in": [
+    "flip.0",
+    "flip.1",
+    "flip.2"
+   ],
+   "text": "화재 Claude-3.7-sonnet: 기존 0.77 → TCM 0.10",
+   "table": "Table 1",
+   "row": "Claude-3.7-sonnet",
+   "values": [
+    "0.77",
+    "0.10"
+   ]
+  },
+  {
+   "id": "t1_08",
+   "kind": "table",
+   "used_in": [
+    "flip.0"
+   ],
+   "text": "화재 Claude-4.6-sonnet: 기존 0.71 → TCM 0.18",
+   "table": "Table 1",
+   "row": "Claude-4.6-sonnet",
+   "values": [
+    "0.71",
+    "0.18"
+   ]
+  },
+  {
+   "id": "t1_09",
+   "kind": "table",
+   "used_in": [
+    "flip.0"
+   ],
+   "text": "화재 Gemini-3.5-flash: 기존 0.69 → TCM 0.22",
+   "table": "Table 1",
+   "row": "Gemini-3.5-flash",
+   "values": [
+    "0.69",
+    "0.22"
+   ]
+  },
+  {
+   "id": "c19",
+   "kind": "quote",
+   "used_in": [
+    "flip.3"
+   ],
+   "text": "GPT-3.5는 평균 하락이 가장 작다 (0.12)",
+   "quote": "GPT-3.5 exhibits the smallest average reduction of 0.12 in value rate"
+  },
+  {
+   "id": "t2_00",
+   "kind": "table",
+   "used_in": [
+    "curve.0",
+    "results.0"
+   ],
+   "text": "Rule: RL 0.00 s, 가치 비율 0.19",
+   "table": "Table 2",
+   "row": "Rule",
+   "values": [
+    "0.00",
+    "0.19"
+   ]
+  },
+  {
+   "id": "t2_01",
+   "kind": "table",
+   "used_in": [
+    "curve.0"
+   ],
+   "text": "Greedy: RL 0.14 s, 가치 비율 0.07",
+   "table": "Table 2",
+   "row": "Greedy",
+   "values": [
+    "0.14",
+    "0.07"
+   ]
+  },
+  {
+   "id": "t2_02",
+   "kind": "table",
+   "used_in": [
+    "curve.0",
+    "results.0"
+   ],
+   "text": "GPT-5: RL 4.00 s, 가치 비율 0.21",
+   "table": "Table 2",
+   "row": "GPT-5",
+   "values": [
+    "4.00",
+    "0.21"
+   ]
+  },
+  {
+   "id": "t2_03",
+   "kind": "table",
+   "used_in": [
+    "curve.0"
+   ],
+   "text": "MCTS: RL 4.30 s, 가치 비율 0.14",
+   "table": "Table 2",
+   "row": "MCTS",
+   "values": [
+    "4.30",
+    "0.14"
+   ]
+  },
+  {
+   "id": "t2_04",
+   "kind": "table",
+   "used_in": [
+    "curve.0"
+   ],
+   "text": "GPT-4: RL 5.46 s, 가치 비율 0.16",
+   "table": "Table 2",
+   "row": "GPT-4",
+   "values": [
+    "5.46",
+    "0.16"
+   ]
+  },
+  {
+   "id": "t2_05",
+   "kind": "table",
+   "used_in": [
+    "curve.0"
+   ],
+   "text": "Gemini-3.5-flash: RL 5.94 s, 가치 비율 0.13",
+   "table": "Table 2",
+   "row": "Gemini-3.5-flash",
+   "values": [
+    "5.94",
+    "0.13"
+   ]
+  },
+  {
+   "id": "t2_06",
+   "kind": "table",
+   "used_in": [
+    "curve.0"
+   ],
+   "text": "Claude-4.6-sonnet: RL 9.83 s, 가치 비율 0.11",
+   "table": "Table 2",
+   "row": "Claude-4.6-sonnet",
+   "values": [
+    "9.83",
+    "0.11"
+   ]
+  },
+  {
+   "id": "t2_07",
+   "kind": "table",
+   "used_in": [
+    "curve.0"
+   ],
+   "text": "Llama-2-7b-hf: RL 14.36 s, 가치 비율 0.03",
+   "table": "Table 2",
+   "row": "Llama-2-7b-hf",
+   "values": [
+    "14.36",
+    "0.03"
+   ]
+  },
+  {
+   "id": "t2_08",
+   "kind": "table",
+   "used_in": [
+    "preplan.1",
+    "results.2"
+   ],
+   "text": "LLM-PrePlanner: RL 0.40 s, 가치 비율 0.40",
+   "table": "Table 2",
+   "row": "LLM-PrePlanner",
+   "values": [
+    "0.40",
+    "0.40"
+   ]
+  },
+  {
+   "id": "t2_09",
+   "kind": "table",
+   "used_in": [
+    "results.1"
+   ],
+   "text": "RRARA-v1: RL 0.00 s, 가치 비율 0.37",
+   "table": "Table 2",
+   "row": "RRARA-v1",
+   "values": [
+    "0.00",
+    "0.37"
+   ]
+  },
+  {
+   "id": "t2_10",
+   "kind": "table",
+   "used_in": [
+    "results.2"
+   ],
+   "text": "RRARA-v2: RL 0.38 s, 가치 비율 0.44",
+   "table": "Table 2",
+   "row": "RRARA-v2",
+   "values": [
+    "0.38",
+    "0.44"
+   ]
+  },
+  {
+   "id": "c20",
+   "kind": "derived",
+   "used_in": [
+    "curve.1"
+   ],
+   "text": "기존 평가 평균 (세 과제): GPT-3.5 0.37, GPT-5 0.48, GPT-4 0.45, Claude-3.7 0.49",
+   "from": [
+    "t1_03",
+    "t1_05",
+    "t1_04",
+    "t1_07"
+   ],
+   "derivation": "Table 1 Base 평균: GPT-3.5 (0.65+0.36+0.09)/3=0.367; GPT-5 (0.73+0.47+0.24)/3=0.48; GPT-4 (0.71+0.44+0.20)/3=0.45; Claude-3.7 (0.77+0.48+0.21)/3=0.487 (점 위치로만 표시)",
+   "on_screen_label": "계산값"
+  },
+  {
+   "id": "c21",
+   "kind": "quote",
+   "used_in": [
+    "idea.0"
+   ],
+   "text": "RRARA: 빠른 반사 행동 + 비동기 LLM 반성",
+   "quote": "Rapid-Reflex Async-Reflect Agent (RRARA), which integrates rapid reflexive actions with asynchronous LLM reflection"
+  },
+  {
+   "id": "c22",
+   "kind": "quote",
+   "used_in": [
+    "idea.1",
+    "idea.2"
+   ],
+   "text": "LLM 결정을 기다리지 않고 바로 반사 행동",
+   "quote": "Instead of waiting for every LLM decision before acting, RRARA immediately executes low-latency reflexive actions"
+  },
+  {
+   "id": "c23",
+   "kind": "quote",
+   "used_in": [
+    "idea.3"
+   ],
+   "text": "반사 층: 미리 계산한 A* 거리, 상수 시간 결정",
+   "quote": "the traversability graph with precomputed A* geodesic distances"
+  },
+  {
+   "id": "c24",
+   "kind": "quote",
+   "used_in": [
+    "preplan.0"
+   ],
+   "text": "사전 계획기: 물체 중심 하위 목표의 순서 목록",
+   "quote": "generates an ordered, object-centric sequence of high-level subgoals"
+  },
+  {
+   "id": "c25",
+   "kind": "quote",
+   "used_in": [
+    "preplan.1"
+   ],
+   "text": "출력은 물체 번호와 쉼표뿐",
+   "quote": "the model output consists solely of object IDs separated by commas"
+  },
+  {
+   "id": "c26",
+   "kind": "example",
+   "used_in": [
+    "preplan.1"
+   ],
+   "text": "화면의 순서 57, 56, 62는 설명용 예시",
+   "values": [
+    "57",
+    "56",
+    "62"
+   ],
+   "on_screen_label": "예시"
+  },
+  {
+   "id": "c27",
+   "kind": "quote",
+   "used_in": [
+    "preplan.2"
+   ],
+   "text": "하위 목표 하나를 마치면 다음 캐시된 목표로",
+   "quote": "After completing one high-level subgoal, the executor proceeds to the next cached subgoal."
+  },
+  {
+   "id": "c28",
+   "kind": "quote",
+   "used_in": [
+    "stalescore.0"
+   ],
+   "text": "캐시된 계획이 아직 유효한지 상태 차이로 잰다",
+   "quote": "To determine whether a cached plan remains valid, we measure the state divergence"
+  },
+  {
+   "id": "c29",
+   "kind": "quote",
+   "used_in": [
+    "stalescore.1"
+   ],
+   "text": "시간·이동·물체 상태·위험 지도 변화",
+   "quote": "measure temporal change, agent motion, object-state change, and hazard-field variation"
+  },
+  {
+   "id": "c30",
+   "kind": "quote",
+   "used_in": [
+    "stalescore.1"
+   ],
+   "text": "비싼 물체의 영향을 β로 조절",
+   "quote": "controls the influence of high-value objects"
+  },
+  {
+   "id": "c31",
+   "kind": "quote",
+   "used_in": [
+    "stalescore.2"
+   ],
+   "text": "재계획 임계값 δ = 0.6",
+   "quote": "the staleness threshold is set to δ = 0.6"
+  },
+  {
+   "id": "c32",
+   "kind": "quote",
+   "used_in": [
+    "stalescore.2"
+   ],
+   "text": "결정론적 점수 (LLM 호출 없음)",
+   "quote": "Deterministic Staleness Score"
+  },
+  {
+   "id": "c33",
+   "kind": "example",
+   "used_in": [
+    "stalescore.1"
+   ],
+   "text": "네 항목 막대의 높이와 게이지 값은 설명용",
+   "values": [],
+   "on_screen_label": "예시"
+  },
+  {
+   "id": "c34",
+   "kind": "quote",
+   "used_in": [
+    "reflect.0"
+   ],
+   "text": "실행 중에도 LLM 반성기가 현재 행동을 계속 평가",
+   "quote": "While the executor acts, the LLM-based reflector continuously evaluates the current action"
+  },
+  {
+   "id": "c35",
+   "kind": "quote",
+   "used_in": [
+    "reflect.2"
+   ],
+   "text": "56 가방: 가치 5, 43.86 m, 202.19 °C",
+   "quote": "name: bag, handbag, pocketbook, purse, id: 56, value: 5, distance: 43.86 m, temperature: 202.19 Celsius"
+  },
+  {
+   "id": "c36",
+   "kind": "quote",
+   "used_in": [
+    "reflect.1",
+    "reflect.2"
+   ],
+   "text": "57 헤어브러시: 가치 1, 44.57 m, 212.25 °C",
+   "quote": "name: hairbrush, id: 57, value: 1, distance: 44.57 m, temperature: 212.25 Celsius"
+  },
+  {
+   "id": "c37",
+   "kind": "quote",
+   "used_in": [
+    "reflect.3"
+   ],
+   "text": "반성기 답: Inappropriate 56",
+   "quote": "Async-Reflector Answer: Inappropriate 56"
+  },
+  {
+   "id": "c38",
+   "kind": "quote",
+   "used_in": [
+    "results.0",
+    "results.2"
+   ],
+   "text": "TCM 평균: RRARA 0.44 vs 최강 LLM 기준선 0.25",
+   "quote": "Under TCM, RRARA achieves an average value rate of 0.44, compared with 0.25 for the strongest LLM baseline."
+  },
+  {
+   "id": "c39",
+   "kind": "quote",
+   "used_in": [
+    "compare.1"
+   ],
+   "text": "GPT-3.5는 이 장면에서 6.5",
+   "quote": "its moderate result of 6.5"
+  },
+  {
+   "id": "c40",
+   "kind": "quote",
+   "used_in": [
+    "compare.1"
+   ],
+   "text": "사전 계획기는 8.5, 근처 물건은 놓침",
+   "quote": "it achieves a higher total value of 8.5. However, nearby objects may be neglected"
+  },
+  {
+   "id": "c41",
+   "kind": "quote",
+   "used_in": [
+    "compare.2"
+   ],
+   "text": "반성기 조언으로 가까운 66번을 먼저",
+   "quote": "prompting the agent to pick up a nearby Object 66 before moving to the opposite side of the room"
+  },
+  {
+   "id": "c42",
+   "kind": "quote",
+   "used_in": [
+    "compare.2"
+   ],
+   "text": "이 장면에서 RRARA가 가장 좋음",
+   "quote": "RRARA achieves the best overall performance in this scenario"
+  },
+  {
+   "id": "c43",
+   "kind": "quote",
+   "used_in": [
+    "caveats.0"
+   ],
+   "text": "반성기: GPT-3.5를 1,000개 시연으로 파인튜닝",
+   "quote": "fine-tuned on 1,000 expert demonstrations"
+  },
+  {
+   "id": "c44",
+   "kind": "table",
+   "used_in": [
+    "caveats.0"
+   ],
+   "text": "사전학습 GPT-3.5 0.25",
+   "table": "Table 3",
+   "row": "Pretrained",
+   "values": [
+    "0.25"
+   ]
+  },
+  {
+   "id": "c45",
+   "kind": "table",
+   "used_in": [
+    "caveats.0"
+   ],
+   "text": "1,000개로 파인튜닝 0.35",
+   "table": "Table 3",
+   "row": "1,000 training examples",
+   "values": [
+    "0.35"
+   ]
+  },
+  {
+   "id": "c46",
+   "kind": "quote",
+   "used_in": [
+    "caveats.1"
+   ],
+   "text": "RL에는 뒤에서 도는 반성기 계산 시간이 빠짐",
+   "quote": "It does not include the total computation time of the background reflector"
+  },
+  {
+   "id": "c47",
+   "kind": "quote",
+   "used_in": [
+    "caveats.2"
+   ],
+   "text": "원격 LLM 응답 시간은 네트워크에 따라 달라 재현이 어렵다",
+   "quote": "whose response times may vary with network conditions"
+  },
+  {
+   "id": "c48",
+   "kind": "quote",
+   "used_in": [
+    "outro.1"
+   ],
+   "text": "논문 제목",
+   "quote": "Reflex First, Reflect Later"
+  },
+  {
+   "id": "c49",
+   "kind": "quote",
+   "used_in": [
+    "caveats.3"
+   ],
+   "text": "TCM은 추론 중 에이전트가 서 있다고 가정; 계속 행동하는 프로토콜도 가능",
+   "quote": "alternative execution protocols may allow an agent to continue its previous action during deliberation"
+  }
+ ],
+ "allow_numbers": {
+  "2506.07223": "arXiv id shown in the title and credits",
+  "1": "equation number, 식 (1)",
+  "2": "equation/table numbers",
+  "4": "equation number, 식 (4)",
+  "7": "equation (7) and figure 7",
+  "10": "equation number, 식 (10)",
+  "11": "equation number, 식 (11)",
+  "3.5": "model name GPT-3.5 / Gemini-3.5",
+  "3.7": "model name Claude-3.7",
+  "4.6": "model name Claude-4.6",
+  "5": "chart axis tick (seconds)",
+  "15": "chart axis tick (seconds)",
+  "0.25": "chart axis tick",
+  "0.5": "chart axis tick",
+  "0": "axis tick / zero value"
+ }
+}
