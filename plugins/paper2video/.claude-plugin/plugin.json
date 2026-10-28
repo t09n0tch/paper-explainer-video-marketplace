@@ -1,7 +1,7 @@
 {
   "name": "paper2video",
-  "version": "1.0.0",
-  "description": "Turn an academic paper (PDF, arXiv link or text) into a narrated explainer video with motion graphics, captions and charts, exported as MP4 plus subtitles.",
+  "version": "2.0.0",
+  "description": "Turn an academic paper (PDF, arXiv link or text) into a narrated explainer video with motion graphics, captions and charts, exported as MP4 plus subtitles, fact-checked against the paper.",
   "author": { "name": "jangwon" },
   "keywords": ["paper", "video", "tts", "논문"]
 }

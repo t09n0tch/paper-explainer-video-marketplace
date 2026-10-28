@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
 """Voice and encoding settings, layered (later wins):
 
-  1. <skill>/defaults.json                          shipped defaults (edge SunHi, x264 CRF 18)
+  1. <skill>/defaults.json                          shipped defaults (supertonic F1, English kokoro af_heart; x264 CRF 18)
   2. ~/.config/paper2video/config.json    this user's own defaults, for every film
   3. film/script.json  "voice" / "encode"           this film only
   4. command-line flags of tts.py / render.py       this run only
 
   python settings.py show [film/]                   print the merged settings
   python settings.py set voice '{"engine": "say", "voice": "Yuna"}'
+                                                    engine and voice may be {lang: value} maps
   python settings.py set encode '{"crf": 23}'       change the user defaults (layer 2)
   python settings.py reset                          delete the user defaults
 """
@@ -33,18 +34,24 @@ def _merge(a, b):
 
 
 def load(spec=None):
-    s = _merge(_read(DEFAULTS), _read(USER))
+    d, u = _read(DEFAULTS), _read(USER)
+    s = _merge(d, u)
+    if u.get("voice"):
+        s["voice"] = u["voice"]
     for key in ("voice", "encode"):
         if spec and spec.get(key):
-            # a film's voice replaces the default voice outright, so a stored
-            # {"engine": "say"} never inherits edge's voice name
+            # a voice (user or film) replaces the one below it outright, so a stored
+            # {"engine": "say"} never inherits supertonic's voice name
             s[key] = _merge(s.get(key, {}), spec[key]) if key == "encode" else spec[key]
     return s
 
 
-def voice_name(v, lang):
-    """voice may be a plain name or a {lang: name} map."""
-    return v.get(lang) if isinstance(v, dict) else v
+def per_lang(v, lang):
+    """engine/voice may be a plain value or a {lang: value} map, "*" for any other language."""
+    return v.get(lang, v.get("*")) if isinstance(v, dict) else v
+
+
+voice_name = per_lang
 
 
 def main():

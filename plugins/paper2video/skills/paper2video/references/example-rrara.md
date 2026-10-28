@@ -2,6 +2,22 @@
 
 A film that the user accepted. 15 scenes, about 5 minutes, Korean narration. Use it for the shape of a film, how chapters split, how much one scene carries, and how visuals hang off sentences. Don't copy its wording or numbers into another paper's film.
 
+**The whole film ships as code**: `p2v new example/ --example rrara` copies `script.json`, `claims.json`
+(69 claims, every number tied to a quote or table row), `world.js` (the room, shared by all 3D scenes) and
+`scenes/*.js`; `p2v paper example/ 2506.07223` fetches the paper (not shipped: arXiv non-exclusive license),
+then `p2v voice`, `p2v preview`, `p2v check` (FAIL 0, WARN 0). Which scene shows which technique:
+
+| technique | scenes |
+|---|---|
+| 3D world (`T3.room`, fire voxels, agent, orbit/look cameras, labels riding on objects) | intro, setting, frozen, preplan, reflect, outro |
+| templates (`TPL.formula` with swap, `lanes`, `split`, `bars`, `cards`, `compose`) | tcm, budget, idea, results, compare, caveats |
+| custom signature shots | flip (bars shrink with ghosts, then re-sort), curve (scatter with drop lines), stalescore (term bars feeding a threshold gauge), reflect (one continuous walk that turns when the answer arrives) |
+
+The shipped script follows the plan below, rewritten where arXiv v2 of the paper differs: the budget,
+curve, compare and caveats lines now say only what v2 (appendix included) states, e.g. RRARA's total in
+the compared episode is only in a figure, so the film shows its behaviour, not a number. The plan is the
+design; `script.json` is what was checked.
+
 Paper: "Reflex First, Reflect Later: Latency-Aware Embodied LLM Agents for Dynamic Response" (Zheng, Mao, Zhang, Cai, University of Sydney). Setting: HAZARD benchmark (fire, flood, wind); an agent rescues valued objects while the hazard spreads. Claims: inference latency matters once simulated time advances during thinking (TCM); RRARA (fast reflex layer + asynchronous LLM reflector, plus an LLM pre-planner and a staleness score) scores best under TCM.
 
 World used in every 3D scene: a 16×10 m room with a doorway wall at x=10, five target objects (56 bag value 5, 62 value 5, 57/64/66 value 1), fire spreading from two sources.

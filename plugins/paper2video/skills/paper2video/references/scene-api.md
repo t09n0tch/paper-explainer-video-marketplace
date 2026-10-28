@@ -1,8 +1,12 @@
 # Scene API
 
-Contents: 1. The contract · 2. What `k` holds · 3. Pattern: the world · 4. Pattern:
-formula that builds (real math typesetting) · 5. Pattern: bars that grow then re-sort · 6. Pattern: timeline
-lanes with a playhead · 7. Pitfalls
+Contents: 1. The contract · 2. What `k` holds · 2a. Templates (`TPL`) · 2b. The 3D world (`T3`) ·
+3. Pattern: the flat world (`k.W3`) · 4. Pattern: formula that builds (real math typesetting) · 5. Pattern:
+bars that grow then re-sort · 6. Pattern: timeline lanes with a playhead · 7. Pitfalls
+
+Sections 4-6 show how the templates work inside; reach for `TPL` first and write these
+by hand only when a shot needs something the template can't do. The worked example
+(`p2v new example/ --example rrara`) has every pattern in real use.
 
 ## 1. The contract
 
@@ -40,13 +44,80 @@ SCENE('setting', {
 | `k.lerp`, `k.c01` | |
 | `k.eo` `k.ei` `k.eio` `k.eob(x, s=1.6)` | easings: out, in, in-out, back-out (overshoot) |
 | `k.fadeWords(el, t, t0, {stagger, dur, dx})` | word-by-word entrance |
-| `k.W3` | pseudo-3D world (below) |
+| `k.W3` | flat, tilted "3D" world on a canvas (section 3); for real 3D use the global `T3` (2b), for ready-made scenes `TPL` (2a) |
 | `k.css(rgb, alpha)`, `k.mix(a, b, p)` | colour helpers for canvas |
 
 Classes in `film.css`: `.ground .grid .words .big .line .sub .small .tag .mono
 .num .hl .k .card .src .lab .chip .art` (`.art` = full-stage SVG).
 
-## 3. Pattern: the world
+## 2a. Templates (`TPL`, assets/templates.js)
+
+A template is a whole scene definition; pass it to `SCENE` directly, or put several in
+one scene with `TPL.compose`, each with its own `box: [x, y, w, h]`:
+
+```js
+SCENE('results', TPL.bars({
+  title: 'TCM 아래 평균 가치 비율',
+  rows: [{ label: 'GPT-3.5', value: 0.25, role: 'second' }, { label: 'RRARA-v2', value: 0.44, role: 'accent', note: '사전 계획기 + 반성기' }],
+  max: 0.5, digits: 2, at: [0, 2], src: 'Table 2',
+}));
+SCENE('tcm', TPL.compose(
+  TPL.formula({ terms: [['F_{\\mathrm{inf}}', '지연 프레임', 'main'], ['=', ''], ['t_{\\mathrm{inf}} \\times \\mathrm{FPS}', '추론 시간 × 초당 프레임']],
+                swap: { at: 1, terms: ['90', null, '3 \\times 30'] }, at: 0, src: '식 (1) · 3초는 예시', box: [140, 160, 1640, 330] }),
+  TPL.lanes({ lanes: [{ label: '에이전트', spans: [[0, 1, '관찰', 'second'], [1, 4, '추론', 'main'], [4, 6, '행동', 'accent']] }],
+              range: [0, 6], at: [2, 2, 2], box: [140, 600, 1640, 170] })
+));
+```
+
+| template | for |
+|---|---|
+| `title` / `end` | opening and closing cards |
+| `bars` | horizontal bars; `sortAt` re-sorts them on a later sentence; `lowerBetter` |
+| `groupBars` | grouped vertical bars with a legend (methods x benchmarks) |
+| `line` | line chart drawn along its path; `logX`; end labels |
+| `flow` | left-to-right pipeline, one box per beat, arrows growing between |
+| `cards` | 1-6 cards (caveats, contributions) |
+| `table` | rows appear one by one; `hl` highlights a row |
+| `split` | one bar cut into parts (time or memory breakdown) |
+| `formula` | equation term by term with meanings; `swap` turns terms into a worked example |
+| `lanes` | time lanes with labelled spans and a playhead |
+
+`at` is a caption index, a list of indices (one per item), or `{ t: seconds }`. Roles:
+`main`, `accent`, `second`, `dim`. Every value is written once as text and fades in with
+its mark, so the on-screen check sees the real number; the title fades in at the start.
+
+## 2b. The 3D world (`T3`, assets/t3.js on three.js)
+
+Same coordinates as `k.W3` and `world.js` (metres, x across, y deep, z up), so one
+`world.js` serves both. One shared WebGL renderer draws whichever scene is on screen.
+
+```js
+SCENE('setting', {
+  init(k) {
+    this.v = T3.view(k, { fov: 38 });                 // canvas + scene + camera + lights, film.css colours
+    this.room = T3.room(window.WORLD); this.v.add(this.room.group);   // floor, walls, furniture, items
+    this.fire = T3.field(window.WORLD, 'main'); this.v.add(this.fire); // hazard voxels
+    this.agent = T3.agent('accent'); this.agent.place(8, 8.4); this.v.add(this.agent);
+    this.lab = k.h('<div class="lab">56 · 5점</div>'); k.stage.append(this.lab);
+  },
+  render(t, k) {
+    this.v.orbit([8, 5, 0], 15, 11, k.lerp(-2.1, -1.8, k.seg(t, 0, k.dur)));   // drift on every hold
+    this.fire.update((x, y) => window.WORLD.fire(x, y, 0.6), t);
+    this.v.draw();                                    // render last, then place labels
+    const p = this.v.at(2.6, 2.8, 0.9); this.lab.style.left = p[0] + 'px'; this.lab.style.top = p[1] + 'px';
+  },
+});
+```
+
+Also: `T3.street(seed)` (procedural road, buildings, trees, cars), `T3.car`, `T3.box`,
+`T3.frustum` (camera view cones), `T3.route(pts)` with `.progress(p)`, `T3.points(n)` +
+`T3.samplePoints(boxes, density)` + `T3.turbo` (depth -> point cloud shots, gaussian
+splats), `T3.fade(obj, a)`, `T3.rng(seed)`. `v.look(pos, target)` places the camera
+directly; to keep the world on the left with cards on the right, aim the camera at a
+point right of the world's centre. Rendering is software WebGL in export, identical on
+every machine.
+
+## 3. Pattern: the flat world (`k.W3`)
 
 ```js
 const WORLD = {
@@ -182,5 +253,12 @@ a correction: a short `--main` arrow between lanes at the moment it happens.
   boxes explicit widths, and check stills on the machine that exports.
 - **Numbers that count up** start near their final value, or a still shows
   "0.00" at the moment the narrator says the number.
+- **3D: render, then place labels.** `v.at()` uses the camera of the last `look`/`orbit`;
+  call `v.draw()` once per frame, at the end of the 3D updates.
+- **The checker reads the screen.** The player records every string that holds on
+  screen for check_claims.py: DOM text (KaTeX by its LaTeX source) and canvas
+  `fillText`. Hide a counter (`opacity: 0`) until it starts moving, or "0.00" lands in
+  `verify/onscreen.json` as a number nobody sourced. Numbers that are not data (ids,
+  equation numbers) go in `claims.json` `allow_numbers` with a reason.
 - **Wide content**: panels on the right, world on the left: move the camera's
   `sx` rather than shrinking the world.
