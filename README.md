@@ -185,11 +185,13 @@ Claude에게 말로 하면 됩니다.
 ## 예시: 오토인코더와 VAE 1편 (머신러닝 강의, 슬라이드 30장 중 3–7장)
 Model : Opus 5.5 · 음성 : Supertonic F1 (로컬)
 
-Beamer 강의자료 PDF로 만든 1편 "차원 축소와 오토인코더"예요. 3분 16초, 챕터 7개, 소프트 자막 트랙이 들어 있어요. 형광펜과 동그라미 15개가 모두 실제 슬라이드 줄 위에 떨어지는지 기계적으로 검사했고, 독립 검증에서 PASS를 받았어요. 슬라이드에 없는 784 예시와 M = D 확인 문제에는 **보충** 표시가 붙어 있어요.
+Beamer 강의자료 PDF로 만든 4편 시리즈의 1편 "차원 축소와 오토인코더"예요. 3분 32초, 11장면, 챕터 7개에 소프트 자막 트랙이 들어 있어요. 실제 슬라이드 위에 형광펜·밑줄·동그라미를 내레이션에 맞춰 긋고, 오토인코더 그림은 애니메이션으로 다시 그렸어요. 마지막에는 시리즈 전체가 함께 쓰는 3D 잠재 공간이 나와요. 입력이 점으로 떨어져 군집을 이루고, 그 사이 빈 곳이 보이는 장면이에요. 슬라이드에 없는 784 예시, M = D 확인 문제, 3D 개념도에는 **보충** 표시가 붙어 있어요. 독립 검증에서 PASS를 받았어요.
 
-https://github.com/user-attachments/assets/9ddc16ea-c906-4410-bab3-421d031d4017
+https://github.com/user-attachments/assets/f02bdff2-9141-4867-92e3-906bbaaa07f9
 
-미리보기는 720p예요. [고화질 다운로드 (1080p, 15.1 MB, 자막 트랙·챕터 포함)](https://github.com/t09n0tch/pdf2video/releases/download/examples/vae-lecture-ep01.mp4) · [대본](examples/vae-lecture/narration.md) · [자막](examples/vae-lecture/narration.srt) · [챕터](examples/vae-lecture/chapters.txt) · [검증 보고서](examples/vae-lecture/VERIFY.md)
+미리보기는 720p예요. [고화질 다운로드 (1080p, 16.8 MB, 자막 트랙·챕터 포함)](https://github.com/t09n0tch/pdf2video/releases/download/examples/vae-lecture-ep01.mp4) · [대본](examples/vae-lecture/narration.md) · [자막](examples/vae-lecture/narration.srt) · [챕터](examples/vae-lecture/chapters.txt) · [검증 보고서](examples/vae-lecture/VERIFY.md)
+
+4편을 이어 붙인 전체 강의(17분 43초, 챕터 33개): [다운로드 (1080p, 167 MB)](https://github.com/t09n0tch/pdf2video/releases/download/examples/vae-lecture-full.mp4)
 
 ## 필요한 것
 
