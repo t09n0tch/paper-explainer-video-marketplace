@@ -73,9 +73,9 @@ Model : Opus 5.5 · 음성 : Supertonic F1 (로컬)
 
 로봇 방 대신 논문 주제에 맞춘 3D 세계를 써요. 추론 과정을 토큰 타일로 이어진 길로 만들고, 타일 높이를 엔트로피로 표현했어요. 갈림길 토큰은 높이 솟아 다른 경로로 갈라지고, 학습 신호는 빛기둥으로 상위 20% 토큰에만 내려와요. 숫자와 주장 72개를 논문 원문과 대조했고(FAIL 0, WARN 0), 독립 검증 2라운드에서 통과했어요. 스킬에서 `p2v new example/ --example forks`로 전체 코드를 받아 볼 수 있어요.
 
-[![Beyond the 80/20 Rule 설명 영상: 배치에서 상위 20% 토큰에만 학습 신호가 내려오는 장면](examples/beyond-8020/poster.jpg)](https://github.com/t09n0tch/pdf2video/releases/download/examples/beyond-8020-film.mp4)
+https://github.com/user-attachments/assets/4edbbbd4-0599-4731-b4fc-fc1431b5d073
 
-[영상 다운로드 (1080p, 51 MB)](https://github.com/t09n0tch/pdf2video/releases/download/examples/beyond-8020-film.mp4) · [대본](examples/beyond-8020/narration.md) · [자막](examples/beyond-8020/narration.srt) · [검증 보고서](examples/beyond-8020/VERIFY.md)
+미리보기는 720p예요. [고화질 다운로드 (1080p, 51 MB)](https://github.com/t09n0tch/pdf2video/releases/download/examples/beyond-8020-film.mp4) · [대본](examples/beyond-8020/narration.md) · [자막](examples/beyond-8020/narration.srt) · [검증 보고서](examples/beyond-8020/VERIFY.md)
 
 ## 필요한 것
 
