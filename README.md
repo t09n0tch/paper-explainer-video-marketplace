@@ -62,9 +62,9 @@ Model : Opus 5.5 · 음성 : Supertonic F1 (로컬)
 
 논문 그림 2의 방을 3D로 다시 만들어, 로봇이 라디오에 다가가지 못하는 이유를 실행 기록에서 찾고 반대편으로 돌아가 집는 과정을 보여 줘요. 숫자와 주장 72개를 논문 원문과 대조했어요(FAIL 0, WARN 0). 독립 검증에서 3라운드에 걸쳐 나온 문제(퍼센트포인트 표기, 비교 대상 누락, 과장 표현 등)를 모두 고쳤어요.
 
-[![ASPIRE 설명 영상: 3D로 다시 그린 라디오 집기 장면](examples/aspire/thumb.jpg)](https://github.com/t09n0tch/pdf2video/releases/download/examples/aspire-film-v2.mp4)
+https://github.com/user-attachments/assets/250a5fbd-f934-4cab-8ec0-38d6bf784e29
 
-[영상 다운로드 (1080p, 17.8 MB)](https://github.com/t09n0tch/pdf2video/releases/download/examples/aspire-film-v2.mp4) · [대본](examples/aspire/narration.md) · [자막](examples/aspire/narration.srt) · [검증 보고서](examples/aspire/VERIFY.md)
+미리보기는 720p예요. [고화질 다운로드 (1080p, 17.8 MB)](https://github.com/t09n0tch/pdf2video/releases/download/examples/aspire-film-v2.mp4) · [대본](examples/aspire/narration.md) · [자막](examples/aspire/narration.srt) · [검증 보고서](examples/aspire/VERIFY.md)
 
 ## 필요한 것
 
@@ -176,9 +176,9 @@ Model : Opus 5.5 · 음성 : Supertonic F1 (로컬)
 
 Beamer 강의자료 PDF로 만든 1편 "차원 축소와 오토인코더"예요. 3분 16초, 챕터 7개, 소프트 자막 트랙이 들어 있어요. 형광펜과 동그라미 15개가 모두 실제 슬라이드 줄 위에 떨어지는지 기계적으로 검사했고, 독립 검증에서 PASS를 받았어요. 슬라이드에 없는 784 예시와 M = D 확인 문제에는 **보충** 표시가 붙어 있어요.
 
-[![VAE 강의 1편: 설명하는 줄에 형광펜이 맞춰지는 슬라이드 장면](examples/vae-lecture/thumb.jpg)](https://github.com/t09n0tch/pdf2video/releases/download/examples/vae-lecture-ep01.mp4)
+https://github.com/user-attachments/assets/9ddc16ea-c906-4410-bab3-421d031d4017
 
-[영상 다운로드 (1080p, 15.1 MB)](https://github.com/t09n0tch/pdf2video/releases/download/examples/vae-lecture-ep01.mp4) · [대본](examples/vae-lecture/narration.md) · [자막](examples/vae-lecture/narration.srt) · [챕터](examples/vae-lecture/chapters.txt) · [검증 보고서](examples/vae-lecture/VERIFY.md)
+미리보기는 720p예요. [고화질 다운로드 (1080p, 15.1 MB, 자막 트랙·챕터 포함)](https://github.com/t09n0tch/pdf2video/releases/download/examples/vae-lecture-ep01.mp4) · [대본](examples/vae-lecture/narration.md) · [자막](examples/vae-lecture/narration.srt) · [챕터](examples/vae-lecture/chapters.txt) · [검증 보고서](examples/vae-lecture/VERIFY.md)
 
 ## 필요한 것
 
