@@ -66,6 +66,17 @@ https://github.com/user-attachments/assets/250a5fbd-f934-4cab-8ec0-38d6bf784e29
 
 미리보기는 720p예요. [고화질 다운로드 (1080p, 17.8 MB)](https://github.com/t09n0tch/pdf2video/releases/download/examples/aspire-film-v2.mp4) · [대본](examples/aspire/narration.md) · [자막](examples/aspire/narration.srt) · [검증 보고서](examples/aspire/VERIFY.md)
 
+## 예시: Beyond the 80/20 Rule (Qwen Team, 2025)
+Model : Opus 5.5 · 음성 : Supertonic F1 (로컬)
+
+[Beyond the 80/20 Rule: High-Entropy Minority Tokens Drive Effective RL for LLM Reasoning](https://arxiv.org/abs/2506.01939) (arXiv 2506.01939, NeurIPS 2025) · 6분 19초 · 16장면
+
+로봇 방 대신 논문 주제에 맞춘 3D 세계를 써요. 추론 과정을 토큰 타일로 이어진 길로 만들고, 타일 높이를 엔트로피로 표현했어요. 갈림길 토큰은 높이 솟아 다른 경로로 갈라지고, 학습 신호는 빛기둥으로 상위 20% 토큰에만 내려와요. 숫자와 주장 72개를 논문 원문과 대조했고(FAIL 0, WARN 0), 독립 검증 2라운드에서 통과했어요. 스킬에서 `p2v new example/ --example forks`로 전체 코드를 받아 볼 수 있어요.
+
+[![Beyond the 80/20 Rule 설명 영상: 배치에서 상위 20% 토큰에만 학습 신호가 내려오는 장면](examples/beyond-8020/poster.jpg)](https://github.com/t09n0tch/pdf2video/releases/download/examples/beyond-8020-film.mp4)
+
+[영상 다운로드 (1080p, 51 MB)](https://github.com/t09n0tch/pdf2video/releases/download/examples/beyond-8020-film.mp4) · [대본](examples/beyond-8020/narration.md) · [자막](examples/beyond-8020/narration.srt) · [검증 보고서](examples/beyond-8020/VERIFY.md)
+
 ## 필요한 것
 
 Python 3.10 이상과 디스크 약 1.5 GB만 있으면 돼요. 처음 실행하면 스킬이 `p2v setup`으로 필요한 도구를 전용 venv(`~/.local/share/paper2video/venv`)에 한 번 설치해요. Playwright와 Chromium, 오프라인 음성(Supertonic·Kokoro), pypdf, 그리고 ffmpeg가 없으면 ffmpeg까지 설치해요.

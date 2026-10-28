@@ -46,10 +46,30 @@ in one chapter keep the same chip text, and it doesn't re-animate.
 
 ## 4. Visual language
 
-- **One world.** Render the paper's setting (a room, a street, a robot arm's
-  table, a map) in real 3D with `T3` once and come back to it in several chapters
-  with different camera angles (`k.W3`, the flat tilted view, suits top-down maps). Continuity is what makes it feel like a film rather
+- **One world.** Render the paper's world in real 3D with `T3` once and come back
+  to it in several chapters with different camera angles (`k.W3`, the flat tilted
+  view, suits top-down maps). Continuity is what makes it feel like a film rather
   than slides.
+- **The world is the paper's subject, not a stock set.** A room, a street, a car and
+  a robot (`T3.room`, `T3.street`, `T3.agent`) fit embodied, robotics and driving
+  papers only. For any other paper, build the world from the thing the paper studies,
+  so that its central quantity becomes something you can see: a height, a glow, a
+  path, a gap. A viewer rejected a film for an LLM-training paper because its 3D
+  looked like robotics/autonomous driving. Decide the world before the first scene,
+  in one sentence: "X is shown as Y; its key quantity is Y's Z."
+
+  | paper is about | world idea |
+  |---|---|
+  | tokens, decoding, RL for LLMs | a road of token tiles; height = entropy/probability/advantage; forks branch off as faint paths; gradients fall as light beams (`--example forks`) |
+  | attention, transformers | tokens as pillars in a row; attention as arcs between them, thickness = weight; heads as stacked layers |
+  | graphs, GNNs, retrieval | nodes as glowing spheres on a floor; edges as ribbons; messages travel along them |
+  | images, diffusion, vision | a patch grid as a field of tiles; noise as jittering heights that settle; masks as darkened tiles |
+  | optimisation, loss landscapes | a terrain mesh; the optimiser as a marker rolling downhill; the paper's trick changes the slope |
+  | data, scaling, benchmarks | a city of bars: one block per model/dataset, rising as size grows |
+  | embodied agents, robots, driving | the room or street itself (`--example rrara`) |
+
+  Labels for the world's pieces (token words, node names) ride on them; if a quantity
+  in the world is illustrative (heights you made up), say so on screen once per scene.
 - **Colour has meaning, held all film:** `--main` = the problem/hazard/loss,
   `--accent` = the method/agent/our result, `--second` = ink and neutral
   objects. Baselines are greyed second.

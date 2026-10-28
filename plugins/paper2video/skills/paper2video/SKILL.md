@@ -192,12 +192,25 @@ ready-made templates (`TPL.bars`, `flow`, `formula`, `table`, `lanes`, ...) and 
 for custom scenes. `--starter` left three example scenes (`room` in 3D, `formula`,
 `chart` from a template) and a `world.js`; replace them with the paper's own.
 
-**Study the worked example before the first scene.** `p2v new example/ --example rrara`
-copies a complete, verified 15-scene film (RRARA, arXiv 2506.07223): script, 69 claims,
-the shared 3D world, and every scene's code: 3D world shots with labels riding on objects,
-template scenes, and custom signature shots (bars that shrink and re-sort, a scatter
-with drop lines, an agent re-routing mid-walk). `references/example-rrara.md` explains
-its plan. Copy patterns from it; don't copy its wording or numbers.
+**Design the world from the paper's subject, not from the starter.** The starter's room is
+for embodied papers only. Before the first scene, write one line in `facts.md`: "the world
+is ___; its key quantity is shown as ___" (tokens as a road of tiles with entropy as height,
+a graph as glowing nodes, a loss as terrain; the table in `references/craft.md` §4). A film
+whose 3D looks like robotics or driving when the paper is about LLMs gets rejected.
+
+**Study a worked example before the first scene**, the one closer to your paper:
+
+- `p2v new example/ --example forks`: an abstract world for an ML paper (Beyond the 80/20
+  Rule, arXiv 2506.01939, LLM RL): 16 scenes, 72 claims. A chain of thought as a road of
+  token tiles whose height is entropy, fork tokens as glowing pillars with branching paths,
+  gradients as light beams, a 100-tile grid that sorts itself, a percentile plane that
+  masks a batch. `references/example-forks.md`.
+- `p2v new example/ --example rrara`: an embodied-agent paper (RRARA, arXiv 2506.07223):
+  15 scenes, 69 claims, a 3D room with fire, an agent re-routing mid-walk, bars that shrink
+  and re-sort, a scatter with drop lines. `references/example-rrara.md`.
+
+Each copies script, claims, the shared world and every scene's code. Copy patterns from
+them; don't copy their wording or numbers.
 
 Use templates for results, pipelines, tables and equations, so they look the same in
 every film; spend custom code on the world and the paper's signature idea. Open every

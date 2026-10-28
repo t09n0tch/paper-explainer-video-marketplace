@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
 """Create a film folder from the templates.
 
-  python new_film.py path/to/film [--starter | --example rrara]
+  python new_film.py path/to/film [--starter | --example forks|rrara]
 
 Copies index.html (the player), engine.js, t3.js (3D on three.js), templates.js (ready-made scenes), film.css,
 katex/ (math typesetting) and three/, and makes scenes/ and audio/.
 --starter also copies a three-scene example (script.json, claims.json, world.js, scenes/) to start from.
---example rrara copies the complete worked example film (15 scenes, claims.json); get its paper with
-  paper_text.py film/ 2506.07223, then timeline.py, tts.py, render.py --preview, check_claims.py.
+--example forks|rrara copies a complete worked example film (script, claims.json, world.js, scenes/); get its
+  paper with paper_text.py film/ 2506.01939 (forks) or 2506.07223 (rrara), then timeline.py, tts.py,
+  render.py --preview, check_claims.py.
 Existing files are never overwritten, so it is safe to run again.
 """
 import os, shutil, sys
