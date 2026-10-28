@@ -90,3 +90,16 @@ set `"burn_captions": true` and shrink the slide (`SH`) to clear the bottom 200 
 - Anything the slides don't say (an example number, a check question, an intuition)
   is marked 보충 on screen and must not contradict the lecture.
 - Don't guess what will be on the exam.
+
+## Where before how, and what is the slides' and what is ours
+
+- **Where before how.** A viewer reviewing a lecture needs to know where they are. The player shows
+  the episode's chapter list at every chapter start; inside a chapter, open a mechanism scene by
+  showing the part in the whole (the step in the pipeline, the box in the diagram) before zooming in.
+- **Fidelity.** Everything on screen is either the slide's (cited by page in `claims.json`) or ours
+  (보충, 계산값, 예시), and ours is labelled where it appears. Formulas keep the slide's notation;
+  a sentence that goes beyond the slide is a supplement and must be right. `l2v check` and the
+  verifier (`references/verification.md`) hold the episode to this.
+- **Marks are claims too.** A highlight says "this line is what I'm talking about". The check proves
+  each mark lands on a real line of the right page; the preview sheets show whether it is the right line.
+

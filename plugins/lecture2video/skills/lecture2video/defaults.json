@@ -1,7 +1,7 @@
 {
   "voice": {
-    "engine": "edge",
-    "voice": {"ko": "ko-KR-SunHiNeural", "en": "en-US-AriaNeural", "ja": "ja-JP-NanamiNeural"},
+    "engine": {"en": "kokoro", "*": "supertonic"},
+    "voice": {"en": "af_heart", "*": "F1"},
     "rate": null,
     "fallback": "auto"
   },

@@ -1,0 +1,43 @@
+{
+  "claims": [
+    {
+      "id": "c01",
+      "kind": "slide",
+      "page": 6,
+      "used_in": [
+        "board.0",
+        "board.1"
+      ],
+      "text": "학습 목표: f, g를 골라 원래 데이터와 되살린 데이터의 차이를 N개 평균으로 최소화",
+      "quote": "min over f, g of (1/N) sum_{n=1}^{N} d(x_n, g(f(x_n)))"
+    },
+    {
+      "id": "c02",
+      "kind": "slide",
+      "page": 6,
+      "used_in": [
+        "board.2"
+      ],
+      "text": "흔한 선택은 제곱 오차",
+      "quote": "squared error ||x_n - g(f(x_n))||^2"
+    },
+    {
+      "id": "c03",
+      "kind": "supplement",
+      "used_in": [
+        "quiz.0",
+        "quiz.1"
+      ],
+      "text": "M = D 확인 문제는 슬라이드에 없는 보충",
+      "reason": "흔한 오해(차원을 줄이지 않으면 항등 함수만 배운다)를 짚는 질문",
+      "on_screen_label": "보충"
+    }
+  ],
+  "allow_numbers": {
+    "6": "slide number in the source tag (강의자료 슬라이드 6)",
+    "3": "quiz countdown",
+    "4": "quiz countdown",
+    "5": "quiz countdown",
+    "0": "quiz countdown (ends at 0)"
+  }
+}

@@ -66,11 +66,35 @@ https://github.com/user-attachments/assets/c3926738-7376-4dc4-a5e2-92bd735e5d04
 
 ## 필요한 것
 
-| 도구 | 설치 |
+Python 3.10 이상과 디스크 약 1.5 GB만 있으면 돼요. 처음 실행하면 스킬이 `p2v setup`으로 필요한 도구를 전용 venv(`~/.local/share/paper2video/venv`)에 한 번 설치해요. Playwright와 Chromium, 오프라인 음성(Supertonic·Kokoro), pypdf, 그리고 ffmpeg가 없으면 ffmpeg까지 설치해요.
+
+| 선택 사항 | 설치 |
 |---|---|
-| ffmpeg | macOS `brew install ffmpeg` · Windows `winget install ffmpeg` · Linux `apt-get install ffmpeg` |
-| Playwright + Chromium | `pip install playwright && python -m playwright install chromium` |
-| edge-tts (기본 음성) | `pip install edge-tts` (인터넷 필요) |
+| poppler (논문 표를 가장 깔끔하게 추출) | macOS `brew install poppler` · Linux `apt-get install poppler-utils` |
+
+모든 단계는 명령어 하나 `p2v`로 실행해요. 터미널에서 직접 쓸 수도 있어요.
+
+```bash
+python3 skills/paper2video/scripts/p2v.py doctor   # 설치 상태와 사용할 음성
+python3 skills/paper2video/scripts/p2v.py smoke    # 전체 도구 체인 점검, ALL PASS로 끝나야 정상
+python3 skills/paper2video/scripts/p2v.py test     # 검사기 회귀 테스트
+```
+
+## 무엇으로 그리나
+
+- **3D 세계**: three.js(WebGL)로 논문의 무대(방, 도로, 로봇 작업대)를 진짜 3D로 만들고, 장면마다 카메라 각도를 바꿔 다시 찾아가요. 물체 위에는 라벨이 따라 붙어요.
+- **템플릿**: 막대·그룹 막대·선 그래프·파이프라인·카드·표·분할 막대·수식·타임라인 레인. 결과와 비교 장면은 영상마다 같은 품질로 나와요.
+- **완성 예제**: RRARA 논문(arXiv 2506.07223) 영상 한 편 전체(15장면, claims 69개)를 코드로 담았어요. 스킬이 새 영상을 만들기 전에 이 예제를 보고 따라 해요.
+
+## 팩트 체크
+
+영상에 나오는 숫자와 주장은 모두 논문 원문과 대조해요. 대본 승인 대신 이 검증이 들어가요.
+
+1. **claims.json**: 영상이 말하거나 보여 주는 사실과 숫자마다 논문 원문 인용이나 표의 행을 붙여요. 직접 계산한 값, 해석, 설명용 예시는 화면에 `계산값`, `예시` 같은 표시를 달아야 해요.
+2. **기계 검사** (`check_claims.py`): 인용과 표 값이 `paper.txt`에 실제로 있는지, 자막·TTS 문장·**플레이어가 실제로 화면에 그린 모든 글자**(`verify/onscreen.json`) 속 숫자가 전부 출처가 있는지 확인해요. FAIL 0, WARN 0이어야 다음 단계로 가요.
+3. **독립 검증**: 대본을 쓰지 않은 새 subagent가 조건·단서(벤치마크, 비교 대상, 하드웨어), 흐름, 화면, 라이선스를 검토해 `VERIFY.md`를 써요. PASS가 나와야 최종 렌더링해요. 3번 고쳐도 통과하지 못하면 멈추고 남은 문제를 알려 줘요.
+
+검증 방식, 3D 기본 요소, 템플릿 구성, 오프라인 음성, `p2v` 도구 체인은 [SunandBean/paper2video](https://github.com/SunandBean/paper2video) (MIT, Sunbin Kim)를 참고해 한국어 내레이션과 이 스킬의 장면 구조에 맞게 다시 만들었어요. three.js(MIT)를 함께 배포해요.
 
 
 ## 기본값과 변경
@@ -79,7 +103,7 @@ https://github.com/user-attachments/assets/c3926738-7376-4dc4-a5e2-92bd735e5d04
 
 | 항목 | 기본값 |
 |---|---|
-| 음성 | `ko-KR-SunHiNeural` (Microsoft 신경망 음성, edge-tts) · 못 쓰면 이 컴퓨터의 다른 음성으로 자동 대체 |
+| 음성 | 오프라인 신경망 음성: 한국어와 그 밖의 언어는 Supertonic 3 `F1`, 영어는 Kokoro `af_heart` (인터넷 불필요, 매번 같은 결과) · 못 쓰면 edge-tts SunHi, 그다음 이 컴퓨터의 다른 음성으로 자동 대체 |
 | 영상 | H.264 (libx264) · CRF 18 · preset medium · 1920×1080 · 30fps |
 | 오디오 | AAC · 192 kbps |
 
@@ -115,15 +139,20 @@ Claude에게 말로 하면 됩니다.
 
 > **🤖 Claude**
 >
-> 30장을 다섯 편으로 나눴어요. 1편(슬라이드 3–7, 오토인코더) 내레이션 초안이에요. 이대로 진행할까요?
-
-> **👤 사용자**
+> 30장을 다섯 편으로 나눠 차례로 만들게요. 1편(슬라이드 3–7, 오토인코더)부터 시작해요.
 >
-> 좋아, 전체 끝까지 만들어서 하나의 영상으로 만들어줘
-
-> **🤖 Claude**
+> 1편 완료 · 3:16 · 검증 PASS, 2편 시작
 >
-> 완성했어요. `lecture.mp4` (17분, 챕터 37개) · `lecture.srt` (자막) · `lecture-chapters.txt` (유튜브 타임스탬프)
+> …
+>
+> 다섯 편을 모두 만들고 하나로 이었어요. `lecture.mp4` · `lecture.srt` (자막) · `lecture-chapters.txt` (유튜브 타임스탬프) · 편별 `film.mp4`
+>
+> | 편 | 슬라이드 | 길이 | 검증 | 보충 |
+> |---|---|---|---|---|
+> | 1 | 3–7 | 3:16 | PASS | 784 예시, M = D 확인 문제 |
+> | … | | | | |
+
+중간에 확인을 묻지 않고 끝까지 만들어요. 편마다 독립 검증이 확인을 대신해요. 한 편만 원하면 "1편만", "슬라이드 9–15만"처럼 말하면 돼요.
 
 ## 한 편의 구성
 
@@ -151,12 +180,27 @@ https://github.com/user-attachments/assets/8663691e-55b5-4586-b6be-d2ad302056c4
 
 ## 필요한 것
 
-| 도구 | 설치 |
-|---|---|
-| PyMuPDF | `pip install pymupdf` |
-| ffmpeg | macOS `brew install ffmpeg` · Windows `winget install ffmpeg` · Linux `apt-get install ffmpeg` |
-| Playwright + Chromium | `pip install playwright && python -m playwright install chromium` |
-| edge-tts (기본 음성) | `pip install edge-tts` (인터넷 필요) |
+Python 3.10 이상만 있으면 돼요. 처음 실행하면 스킬이 `l2v setup`으로 도구를 한 번 설치해요. Playwright와 Chromium, PyMuPDF, 오프라인 음성, ffmpeg(없을 때)를 설치하고, paper2video와 같은 venv와 음성 모델을 함께 써요. paper2video를 이미 설치했다면 PyMuPDF만 추가돼요.
+
+```bash
+python3 skills/lecture2video/scripts/l2v.py doctor   # 설치 상태와 사용할 음성
+python3 skills/lecture2video/scripts/l2v.py smoke    # 전체 도구 체인 점검, ALL PASS로 끝나야 정상
+```
+
+## 슬라이드 충실도 검사
+
+영상에 나오는 내용은 모두 교수님 슬라이드와 대조해요.
+
+1. **claims.json**: 영상이 말하거나 보여 주는 사실·숫자·수식마다 슬라이드 쪽 번호와 그 쪽의 원문을 붙여요. 슬라이드에 없는 설명, 확인 문제, 직관, 교재 내용은 **보충**으로 표시하고 이유나 출처를 적어요.
+2. **기계 검사** (`l2v check`): 다음을 확인해요. FAIL 0, WARN 0이어야 다음 단계로 가요.
+   - 인용이 그 쪽에 실제로 있는지
+   - 자막, TTS 문장, 화면 글자 속 숫자가 모두 출처가 있는지
+   - 보충·계산값·예시 표시가 화면에 떴는지
+   - **형광펜과 동그라미가 실제 슬라이드 줄이나 그림 위에 떨어지는지**
+   - 화면에 나온 수식 목록은 검증 에이전트가 슬라이드와 비교할 수 있게 따로 정리해요.
+3. **독립 검증**: 영상을 만들지 않은 새 subagent가 슬라이드 표기, 보충의 정확성, 확인 문제의 답, 흐름, 화면을 검토해 `VERIFY.md`를 써요. PASS가 나와야 최종 렌더링해요.
+
+챕터가 바뀔 때마다 이번 편의 챕터 목록이 화면 위쪽에 잠깐 떠서, 지금 강의의 어디쯤인지 먼저 보여 줘요.
 
 음성과 인코딩 기본값, 바꾸는 방법은 [위의 논문 스킬](#기본값과-변경)과 같아요. 사용자 설정만 `~/.config/lecture2video/config.json`에 따로 저장돼요.
 
