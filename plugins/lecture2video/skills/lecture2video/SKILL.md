@@ -190,6 +190,10 @@ Read `references/scene-api.md`. In short:
   ideas per episode that need motion (a rebuilt diagram, a quiz answer that shows
   why, a board equation). `parts.js` has cell columns, rise-in and the board wipe;
   `assets/starter/` and `references/example-vae-scenes/` have working ones to copy.
+- **3D in hand-built scenes** (`T3`, three.js, loaded in every episode): when space carries
+  the idea (a latent space, a loss surface, layers of a network), build the world from the
+  lecture's own subject, never a room or street; `assets/starter/scenes/latent.js` and
+  `references/scene-api.md` §6b. In a series, build it once and revisit it across episodes.
 - Time everything from `k.caps[i].t0`, never fixed seconds.
 - Where before how: at each chapter start the player shows the episode's chapter list along
   the top for a few seconds, current one lit (`"agenda": false` in script.json turns it off).
@@ -260,6 +264,6 @@ figures in them belong to the instructor: say so before the user posts anything 
 - `references/craft.md`: structure, pacing, slide-scene and narration rules (read before step 3)
 - `references/verification.md`: claims.json, the mechanical check, the verifier's five layers
 - `references/scene-api.md`: the slide scene, parts.js, board and quiz patterns
-- `references/scene-api-paper.md`: the engine's full API from the paper skill: pseudo-3D
+- `references/scene-api-paper.md`: the engine's full API from the paper skill: real 3D (`T3`), pseudo-3D
   world, bars that re-sort, timeline lanes (for processes and algorithms)
 - `references/example-vae.md`: a whole accepted episode, plan to scenes
