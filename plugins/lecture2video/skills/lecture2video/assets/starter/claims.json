@@ -31,6 +31,17 @@
       "text": "M = D 확인 문제는 슬라이드에 없는 보충",
       "reason": "흔한 오해(차원을 줄이지 않으면 항등 함수만 배운다)를 짚는 질문",
       "on_screen_label": "보충"
+    },
+    {
+      "id": "c04",
+      "kind": "supplement",
+      "used_in": [
+        "latent.1",
+        "latent.2"
+      ],
+      "text": "오토인코더 잠재 공간의 군집과 그 사이 빈 곳은 슬라이드에 없는 보충 설명 (점 위치는 개념도)",
+      "reason": "VAE가 왜 필요한지 이어지는 강의 흐름의 동기",
+      "on_screen_label": "보충"
     }
   ],
   "allow_numbers": {

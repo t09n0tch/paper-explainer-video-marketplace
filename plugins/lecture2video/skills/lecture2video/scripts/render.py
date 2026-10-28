@@ -135,7 +135,7 @@ def main():
     from playwright.sync_api import sync_playwright
     with sync_playwright() as p:
         kw = {"executable_path": os.environ["CHROMIUM_PATH"]} if os.environ.get("CHROMIUM_PATH") else {}
-        b = p.chromium.launch(**kw)
+        b = p.chromium.launch(args=["--use-angle=swiftshader", "--enable-unsafe-swiftshader", "--ignore-gpu-blocklist"], **kw)   # software WebGL for t3.js
         pg = b.new_page(viewport={"width": 1920, "height": 1080})
         errors = []
         note = lambda e: errors.append(e.split("\n")[0]) if e.split("\n")[0] not in errors else None   # one line per distinct error

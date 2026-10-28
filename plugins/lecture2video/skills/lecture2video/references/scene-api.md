@@ -1,12 +1,14 @@
 # Scene API for lecture episodes
 
 Contents: 1. Slide scenes · 2. Hand-built scenes and `k` · 3. parts.js · 4. Pattern:
-board equation · 5. Pattern: check question · 6. Pattern: rebuilt diagram · 7. Pitfalls
+board equation · 5. Pattern: check question · 6. Pattern: rebuilt diagram · 6b. Pattern: a 3D world
+built from the lecture's subject · 7. Pitfalls
 
 The engine (`engine.js`, the player, `render.py`) is the paper skill's, unchanged:
 `render(t, k)` must be a pure function of `t`; no timers, CSS transitions or
 `Math.random()`. `references/scene-api-paper.md` has the full `k` table, the
-pseudo-3D world, re-sorting bars and timeline lanes.
+pseudo-3D world, re-sorting bars and timeline lanes. Real 3D (`T3`, `t3.js` on three.js) is loaded
+in every episode too: section 6b.
 
 ## 1. Slide scenes
 
@@ -111,7 +113,54 @@ outlined together on "x̂ ≈ x", and an arc from output back to input labelled 
 the slide's own phrase. Keep the slide's layout and symbols so the viewer
 recognises it, and tag it `강의자료 슬라이드 N · 다시 그림`.
 
+## 6b. Pattern: a 3D world built from the lecture's subject
+
+Use real 3D only in hand-built scenes, and only when depth or space carries the idea (a latent
+space, a loss surface, a network's layers, a graph). Build the world from the lecture's own object,
+never a room or street: those come from the paper skill's robotics example and make a machine
+learning lecture look like a robotics one. `assets/starter/scenes/latent.js` is a working scene: the
+latent space is the floor, codes fall onto it and cluster, the gap between clusters lights up in
+`--main`.
+
+```js
+SCENE('latent', {
+  init(k) {
+    this.v = T3.view(k, { fov: 36 });                       // canvas + scene + camera + lights, film.css colours
+    // floor wide enough that its edges never show (80 m), faint grid; then the subject's pieces:
+    const m = new THREE.Mesh(new THREE.SphereGeometry(0.2, 16, 12), T3.mat('accent')); this.v.add(m);
+    this.lab = k.h('<div class="lab">잠재 공간 <span class="tex">z</span></div>'); k.stage.append(this.lab);
+  },
+  render(t, k) {
+    m.position.copy(T3.v3(x, y, z));                          // world: x across, y deep, z up
+    this.v.look([6, 6.5 + 15, 11], [6, 6.5, 0]);             // camera on the +y side (see Pitfalls)
+    this.v.draw();                                            // render, then place labels
+    const p = this.v.at(x, y, z); this.lab.style.left = p[0] + 'px'; this.lab.style.top = p[1] + 'px';
+  },
+});
+```
+
+| lecture topic | world |
+|---|---|
+| autoencoders, VAEs | latent space as the floor; codes as points; VAE codes as translucent blobs pulled toward a prior dome |
+| optimisation, gradient descent | loss surface as a terrain mesh; the parameters as a ball rolling downhill |
+| neural networks | layers as rows of nodes in depth; activations as glow travelling forward |
+| attention, transformers | tokens as a row of pillars; attention as arcs, thickness = weight |
+| graphs, search, shortest paths | nodes as spheres on a floor, edges as ribbons (`T3.route`), the frontier lit |
+| sampling, Monte Carlo | a density as a height field; samples falling as points or beams |
+
+In a series, build the world once (a shared file in `"shared"`) and return to it in later episodes
+with new cameras, so the episodes feel like one course. Copy the slides' notation for labels and keep
+the colour roles. Positions you made up (cluster centres, terrain shape) are a 개념도: carry the 보충
+badge and a `supplement` claim, as the starter does. `T3` helpers, beams, threshold planes and
+the token-road pattern are in the paper skill (`scene-api-paper.md` §2b; paper2video
+`--example forks`).
+
 ## 7. Pitfalls
+
+- **3D handedness: look from the +y side.** `T3.v3` maps world (x, y, z) to three.js (x, z, y), which
+  flips handedness; from a camera at negative y, x runs right to left.
+- **3D: call `v.draw()` once per frame, after every 3D update, then place labels** (`v.at` uses the
+  camera of the last `look`).
 
 - KaTeX inline mode puts `\min_{f,g}` and `\sum` limits to the side; use `\displaystyle`.
 - A slide scene with no `mark` on a step still dims the rest: good for "look at this

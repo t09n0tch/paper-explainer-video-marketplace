@@ -5,7 +5,7 @@
   },
   "metadata": {
     "description": "논문·강의자료를 TTS 내레이션 설명 영상으로 만드는 스킬",
-    "version": "2.2.0"
+    "version": "2.3.0"
   },
   "plugins": [
     {
@@ -26,7 +26,7 @@
       "name": "lecture2video",
       "source": "./plugins/lecture2video",
       "description": "Turn lecture slides (PDF) into narrated review episodes on the real slides, with quizzes, soft subtitles and chapters (MP4), every fact checked against the slides. Offline voices. Korean by default.",
-      "version": "2.0.0",
+      "version": "2.1.0",
       "category": "productivity",
       "keywords": [
         "lecture",

@@ -46,6 +46,58 @@ SCENE('setting', {
 Classes in `film.css`: `.ground .grid .words .big .line .sub .small .tag .mono
 .num .hl .k .card .src .lab .chip .art` (`.art` = full-stage SVG).
 
+## 2b. The 3D world (`T3`, assets/t3.js on three.js)
+
+Same coordinates as `k.W3` and `world.js` (metres, x across, y deep, z up), so one
+`world.js` serves both. One shared WebGL renderer draws whichever scene is on screen.
+
+```js
+SCENE('setting', {
+  init(k) {
+    this.v = T3.view(k, { fov: 38 });                 // canvas + scene + camera + lights, film.css colours
+    this.room = T3.room(window.WORLD); this.v.add(this.room.group);   // floor, walls, furniture, items
+    this.fire = T3.field(window.WORLD, 'main'); this.v.add(this.fire); // hazard voxels
+    this.agent = T3.agent('accent'); this.agent.place(8, 8.4); this.v.add(this.agent);
+    this.lab = k.h('<div class="lab">56 · 5점</div>'); k.stage.append(this.lab);
+  },
+  render(t, k) {
+    this.v.orbit([8, 5, 0], 15, 11, k.lerp(-2.1, -1.8, k.seg(t, 0, k.dur)));   // drift on every hold
+    this.fire.update((x, y) => window.WORLD.fire(x, y, 0.6), t);
+    this.v.draw();                                    // render last, then place labels
+    const p = this.v.at(2.6, 2.8, 0.9); this.lab.style.left = p[0] + 'px'; this.lab.style.top = p[1] + 'px';
+  },
+});
+```
+
+Also: `T3.street(seed)` (procedural road, buildings, trees, cars), `T3.car`, `T3.box`,
+`T3.frustum` (camera view cones), `T3.route(pts)` with `.progress(p)`, `T3.points(n)` +
+`T3.samplePoints(boxes, density)` + `T3.turbo` (depth -> point cloud shots, gaussian
+splats), `T3.fade(obj, a)`, `T3.rng(seed)`. `v.look(pos, target)` places the camera
+directly; to keep the world on the left with cards on the right, aim the camera at a
+point right of the world's centre. Rendering is software WebGL in export, identical on
+every machine.
+
+## 2c. Pattern: an abstract world (not a room)
+
+Most papers need a world built from their own subject (`references/craft.md`, "The world is the paper's
+subject"). The pieces are a few meshes reused everywhere; paper2video `--example forks` ships them in `world.js` as
+`window.FORK`:
+
+```js
+// a tile whose height carries the paper's quantity; base at z = 0 so scaling grows it upward
+const g = new THREE.BoxGeometry(0.92, 1, 0.92); g.translate(0, 0.5, 0);
+const m = new THREE.Mesh(g, new THREE.MeshStandardMaterial({ color: T3.color('accent'), emissive: T3.color('accent'), emissiveIntensity: 0.4 }));
+m.scale.y = 0.12 + 3.0 * h; m.position.copy(T3.v3(x, y, 0));
+// a beam (gradient, signal, attention) falling from the sky onto it: an open cylinder with AdditiveBlending,
+// bottom lerped from top + 7 down to the tile's top by p; a RingGeometry on the tile when it lands
+// a threshold: a translucent PlaneGeometry plus EdgesGeometry outline, raised with .position (the cut)
+// alternatives / branches: T3.route(points) ribbons, grown with .progress(p)
+```
+
+Signature moves built from these: tiles sorting from shuffled to ranked (lerp each tile between two grid
+cells), a plane rising to a percentile cut and only tiles above it lighting up, several copies of the same
+row stacked in depth to compare checkpoints, heights growing with a wireframe ghost of the old height.
+
 ## 3. Pattern: the world
 
 ```js

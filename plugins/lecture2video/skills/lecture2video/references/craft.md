@@ -62,6 +62,12 @@ its parts. Copy the slide's notation and colour meaning; don't redesign the idea
   under it, written on (left-to-right wipe) when the voice names it, inputs before
   the result. Use `\displaystyle` for sums and limits and leave ~100 px under the row
   for the labels, or limits collide with them.
+- **3D world from the subject:** when depth helps (a latent space, a loss surface,
+  a network's layers), make the 3D world out of the lecture's own object, not a stock
+  set: a room or street makes an ML lecture look like robotics. Decide it in one line
+  before building ("the latent space is the floor; codes are points"), keep the slides'
+  notation on its labels, and revisit the same world across a series
+  (`scene-api.md` §6b).
 - **Colour roles:** `--second` for data and neutral ink, `--accent` for the thing
   being learned or the answer (z, the reconstruction), `--main` for errors, losses,
   differences and the 보충 badge.
